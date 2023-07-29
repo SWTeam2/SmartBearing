@@ -1,0 +1,1 @@
+# SmartFactory_BearingRUL
