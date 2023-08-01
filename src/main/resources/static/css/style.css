@@ -1,0 +1,56 @@
+.center-outer-div {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.center-inner-div {
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.center-box-input {
+    display: block;
+    width: 274px;
+    color: #697077;
+    font-size: 15px;
+    background: #FFFFFF;
+    padding: 13px;
+    margin-bottom: 10px;
+    border: none;
+    border-bottom: 1px solid #C1C7CD;
+}
+
+.center-box-input:focus {
+    outline: none;
+}
+
+.center-box-btn {
+    display: block;
+    width: 300px;
+    color: white;
+    font-size: 15px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+}
+
+.bg-blue {
+    background: #004CDB;
+}
+
+.bg-blue:hover {
+    background: #003AA7;
+}
+
+.bg-charcoal {
+    background: #8A96A8;
+}
+
+.bg-charcoal:hover {
+    background: #717D8F;
+}
