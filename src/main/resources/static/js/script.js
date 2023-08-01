@@ -12,7 +12,12 @@ function checkEmployee() {
     }
 }
 
+function login() {
+    // 로그인 과정 수행
+    window.location.href = '/dashboard';
+}
+
 function logout() {
     // 로그아웃 과정 수행
-    window.location.href='/login';
+    window.location.href = '/login';
 }
