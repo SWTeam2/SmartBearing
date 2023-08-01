@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @RequiredArgsConstructor
 @Controller
-public class LoginController {
+public class ViewController {
     @GetMapping("/")
     public String intro() {
         return "login";
@@ -15,5 +15,10 @@ public class LoginController {
     @GetMapping("/login")
     public String login() {
         return "login";
+    }
+
+    @GetMapping("/signup")
+    public String signup() {
+        return "signup";
     }
 }
