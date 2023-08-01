@@ -73,3 +73,42 @@
     color: #002F88;
     font-weight: bold;
 }
+
+.sidebar-row {
+    padding: 3% 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar-icon {
+    width: 14%;
+    height: 14%;
+}
+
+.sidebar-text {
+    width : 86%;
+    padding-left: 12%;
+    font-size: 20px;
+}
+
+.drag-prevent {
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+}
+
+.cursor-pointer:hover {
+    cursor : pointer;
+}
+
+.hover-bg-grey:hover {
+    background: #F2F4F8;
+}
+
+.layout-title {
+    font-size: 40px;
+    font-weight: bold;
+    margin : 3%;
+}
