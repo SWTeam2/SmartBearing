@@ -5,6 +5,9 @@
     <title>Smart Bearing</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <script type="text/javascript" src="js/script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            crossorigin="anonymous"></script>
     <style>
         html,
         body {
@@ -21,13 +24,16 @@
         </div>
 
         <form>
-            <input class="center-box-input" placeholder="Employee ID">
+            <input id="employee_id"  class="center-box-input" placeholder="Employee ID">
             <div>
-                <input class="center-box-input" placeholder="Business Email" style="display: inline-block; width: 154px; margin-right: 5px">
-                <button class="center-box-btn bg-charcoal" style="display: inline-block; width: 110px;" type="button" onclick="checkEmployee()">CONFIRM</button>
+                <input id="business_email" class="center-box-input" placeholder="Business Email"
+                       style="display: inline-block; width: 154px; margin-right: 5px">
+                <button class="center-box-btn bg-charcoal" style="display: inline-block; width: 110px;" type="button"
+                        onclick="checkEmployee()">CONFIRM
+                </button>
             </div>
-            <input id="signup_id" class="center-box-input" placeholder="ID" disabled>
-            <input id="signup_password" class="center-box-input" placeholder="Password" type="password" disabled>
+            <input id="id" class="center-box-input" placeholder="ID" disabled>
+            <input id="pw" class="center-box-input" placeholder="Password" type="password" disabled>
             <button class="center-box-btn bg-blue" type="submit">SIGN UP</button>
             <a class="a-blue" href="/login">Return to Login page</a>
         </form>
