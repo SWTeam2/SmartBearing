@@ -29,14 +29,23 @@
     outline: none;
 }
 
+.center-box-input:disabled {
+    background: #DAE0E5;
+}
+
 .center-box-btn {
     display: block;
     width: 300px;
     color: white;
     font-size: 15px;
-    padding: 10px;
+    padding: 13px;
     margin-bottom: 10px;
     border: none;
+}
+
+.center-box-title {
+    font-size: 40px;
+    font-weight: bold;
 }
 
 .bg-blue {
@@ -44,7 +53,7 @@
 }
 
 .bg-blue:hover {
-    background: #003AA7;
+    background: #002F88;
 }
 
 .bg-charcoal {
@@ -52,5 +61,15 @@
 }
 
 .bg-charcoal:hover {
-    background: #717D8F;
+    background: #535F71;
+}
+
+.a-blue {
+    color : #004CDB;
+    text-decoration: none;
+}
+
+.a-blue:hover {
+    color: #002F88;
+    font-weight: bold;
 }
