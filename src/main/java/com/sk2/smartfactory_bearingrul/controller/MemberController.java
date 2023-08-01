@@ -23,12 +23,6 @@ public class MemberController {
         String employeeId = requestData.get("employeeId");
         String email = requestData.get("email");
 
-        boolean exists = employeeRepository.existsByEmployeeIdAndEmail(employeeId, email);
-
-        if (exists) {
-            return true;
-        } else {
-            return false;
-        }
+        return employeeRepository.existsByEmployeeIdAndEmail(employeeId, email);
     }
 }
