@@ -11,3 +11,8 @@ function checkEmployee() {
         alert('일치하는 사원 정보가 존재하지 않습니다.')
     }
 }
+
+function logout() {
+    // 로그아웃 과정 수행
+    window.location.href='/login';
+}
