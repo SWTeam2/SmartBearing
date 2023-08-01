@@ -21,4 +21,19 @@ public class ViewController {
     public String signup() {
         return "signup";
     }
+
+    @GetMapping("/dashboard")
+    public String dashboard() {
+        return "dashboard";
+    }
+
+    @GetMapping("/employee")
+    public String employee() {
+        return "employee";
+    }
+
+    @GetMapping("/notification")
+    public String notification() {
+        return "notification";
+    }
 }
