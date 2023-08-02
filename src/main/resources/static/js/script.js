@@ -11,3 +11,13 @@ function checkEmployee() {
         alert('일치하는 사원 정보가 존재하지 않습니다.')
     }
 }
+
+function login() {
+    // 로그인 과정 수행
+    window.location.href = '/dashboard';
+}
+
+function logout() {
+    // 로그아웃 과정 수행
+    window.location.href = '/login';
+}

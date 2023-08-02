@@ -4,11 +4,16 @@
     <meta charset="UTF-8">
     <title>Smart Bearing</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script type="text/javascript" src="js/script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            crossorigin="anonymous"></script>
     <style>
         html,
         body {
             width: 100%;
             height: 100%;
+            margin: 0;
         }
     </style>
 </head>
@@ -22,7 +27,7 @@
         <form>
             <input class="center-box-input" placeholder="ID">
             <input class="center-box-input" placeholder="Password" type="password">
-            <button class="center-box-btn bg-blue" type="submit">LOGIN</button>
+            <button class="center-box-btn bg-blue" type="button" onclick="login()">LOGIN</button>
             <button class="center-box-btn bg-charcoal" type="button" onclick="location.href='/signup'">SIGN UP</button>
         </form>
     </div>
