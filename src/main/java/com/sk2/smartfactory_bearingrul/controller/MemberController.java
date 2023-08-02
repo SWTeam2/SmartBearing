@@ -2,7 +2,7 @@ package com.sk2.smartfactory_bearingrul.controller;
 
 //import com.sk2.smartfactory_bearingrul.mapper.MemberMapper;
 import com.sk2.smartfactory_bearingrul.repository.EmployeeRepository;
-import com.sk2.smartfactory_bearingrul.service.MemberService;
+//import com.sk2.smartfactory_bearingrul.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,13 +12,13 @@ import java.util.Map;
 public class MemberController {
 
     private final EmployeeRepository employeeRepository;
-    private final MemberService memberService;
+//    private final MemberService memberService;
 //    private final MemberMapper memberMapper;
 
     @Autowired
-    public MemberController(EmployeeRepository employeeRepository, MemberService memberService) {
+    public MemberController(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
-        this.memberService = memberService;
+//        this.memberService = memberService;
 //        this.memberMapper = memberMapper;
     }
 
