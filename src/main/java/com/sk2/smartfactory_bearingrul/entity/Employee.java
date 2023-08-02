@@ -38,5 +38,9 @@ public class Employee {
     private String department;
 
     @Column(length = 100, nullable = false)
-    private String admin;
+    private String position;
+
+    @Column(length = 100, nullable = true)
+    private String in_charge;
+
 }
