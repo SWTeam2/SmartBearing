@@ -1,15 +1,32 @@
 function checkEmployee() {
-    let check = false; // API 반환값
+    let employeeId = $('#employee_id');
+    let email = $('#business_email');
+    let id = $('#id');
+    let pw = $('#pw');
 
-    if (check == true) {
-        alert('일치하는 사원 정보가 존재합니다.')
-        let id = document.getElementById('signup_id');
-        let pw = document.getElementById('signup_password');
-        id.disabled = false;
-        pw.disabled = false;
-    } else {
-        alert('일치하는 사원 정보가 존재하지 않습니다.')
-    }
+    const requestData = {
+        employeeId: employeeId.val(),
+        email: email.val()
+    };
+
+    $.ajax({
+        type: "POST",
+        url: "/signup/check-employee",
+        contentType: "application/json",
+        data: JSON.stringify(requestData),
+        success: function(response) {
+            if (response === true) {
+                alert('일치하는 사원 정보가 존재합니다.')
+                id.prop('disabled', false);
+                pw.prop('disabled', false);
+            } else {
+                alert('일치하는 사원 정보가 존재하지 않습니다.')
+            }
+        },
+        error: function() {
+            alert("사원 확인 중 오류가 발생했습니다.");
+        }
+    });
 }
 
 function login() {
