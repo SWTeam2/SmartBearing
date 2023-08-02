@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
     boolean existsByEmployeeIdAndEmail(String employeeId, String email);
+
+    // employeeId로 Employee를 찾는 메서드
+    Employee findByEmployeeId(String employeeId);
 }
