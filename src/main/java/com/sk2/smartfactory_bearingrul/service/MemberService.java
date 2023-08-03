@@ -42,4 +42,12 @@ public class MemberService {
     public boolean checkRegistration(String employeeId, String email) {
         return employeeRepository.existsByEmployeeIdAndEmail(employeeId, email);
     }
+
+    public boolean isDuplicated(String memberId) {
+        return memberRepository.existsByMemberId(memberId);
+    }
+
+    public boolean isExisted(String employeeId) {
+        return memberRepository.existsByEmployeeId(employeeId);
+    }
 }
