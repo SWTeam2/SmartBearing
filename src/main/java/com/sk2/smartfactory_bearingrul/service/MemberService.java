@@ -28,7 +28,7 @@ public class MemberService {
                     .employeeId(employeeId)
                     .memberId(memberId)
                     .password(password)
-                    .createdAt(LocalDateTime.now())
+//                    .createdAt(LocalDateTime.now())
                     .build();
 
             // member를 Member 테이블에 저장
@@ -37,5 +37,8 @@ public class MemberService {
             // Employee 테이블에서 employeeId와 email이 일치하지 않는 경우 처리
             throw new IllegalArgumentException("사원을 찾을 수 없습니다.");
         }
+    }
+    public boolean checkRegistration(String employeeId, String email) {
+        return employeeRepository.existsByEmployeeIdAndEmail(employeeId, email);
     }
 }
