@@ -1,24 +1,20 @@
 function checkEmployee() {
-    let employeeId = $('#employee_id');
-    let email = $('#business_email');
-    let id = $('#id');
-    let pw = $('#pw');
-
     const requestData = {
-        employeeId: employeeId.val(),
-        email: email.val()
+        employeeId: $('#employee_id').val(),
+        email: $('#business_email').val()
     };
 
     $.ajax({
-        type: "POST",
-        url: "/signup/check-employee",
+        method: "POST",
+        url: "/api/members/signup/check-employee",
         contentType: "application/json",
         data: JSON.stringify(requestData),
         success: function(response) {
             if (response === true) {
                 alert('일치하는 사원 정보가 존재합니다.')
-                id.prop('disabled', false);
-                pw.prop('disabled', false);
+
+                $('#id').prop('disabled', false);
+                $('#pw').prop('disabled', false);
             } else {
                 alert('일치하는 사원 정보가 존재하지 않습니다.')
             }
@@ -30,11 +26,29 @@ function checkEmployee() {
 }
 
 function login() {
-    // 로그인 과정 수행
-    window.location.href = '/dashboard';
+    const requestData = {
+        memberId: $("#id").val(),
+        password: $("#password").val()
+    };
+
+    $.ajax({
+        method: "POST",
+        url: "/api/members/login",
+        contentType: "application/json",
+        data: JSON.stringify(requestData),
+        success: function(response) {
+            console.log(response);
+            window.location.href = '/dashboard';
+        },
+        error: function(response) {
+            console.log(response);
+            // Handle error response
+        }
+    });
+
 }
 
 function logout() {
     // 로그아웃 과정 수행
-    window.location.href = '/login';
+    window.location.href = '/';
 }
