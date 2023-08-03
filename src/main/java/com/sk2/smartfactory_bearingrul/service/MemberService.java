@@ -1,13 +1,11 @@
 package com.sk2.smartfactory_bearingrul.service;
 
-import com.sk2.smartfactory_bearingrul.dto.MemberPostDto;
+import com.sk2.smartfactory_bearingrul.dto.MemberDto;
 import com.sk2.smartfactory_bearingrul.entity.Employee;
 import com.sk2.smartfactory_bearingrul.entity.Member;
 import com.sk2.smartfactory_bearingrul.repository.EmployeeRepository;
 import com.sk2.smartfactory_bearingrul.repository.MemberRepository;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @Service
 public class MemberService {
@@ -20,16 +18,16 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public void registerMember(MemberPostDto memberPostDto) {
+    public void registerMember(MemberDto memberDto) {
         // 주어진 employeeId와 email로 Employee 테이블에서 확인
         Employee employee = employeeRepository.findByEmployeeIdAndEmail(
-                memberPostDto.getEmployeeId(), memberPostDto.getEmail());
+                memberDto.getEmployeeId(), memberDto.getEmail());
         if (employee != null) {
             // 새 Member 객체를 생성
             Member member = Member.builder()
-                    .employeeId(memberPostDto.getEmployeeId())
-                    .memberId(memberPostDto.getMemberId())
-                    .password(memberPostDto.getPassword())
+                    .employeeId(memberDto.getEmployeeId())
+                    .memberId(memberDto.getMemberId())
+                    .password(memberDto.getPassword())
                     .build();
 
             // member를 Member 테이블에 저장
