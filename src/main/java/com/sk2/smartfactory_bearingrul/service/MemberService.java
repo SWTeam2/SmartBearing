@@ -1,21 +1,30 @@
 package com.sk2.smartfactory_bearingrul.service;
 
+import com.sk2.smartfactory_bearingrul.config.jwt.JwtTokenProvider;
 import com.sk2.smartfactory_bearingrul.dto.MemberDto;
 import com.sk2.smartfactory_bearingrul.entity.Employee;
 import com.sk2.smartfactory_bearingrul.entity.Member;
 import com.sk2.smartfactory_bearingrul.repository.EmployeeRepository;
 import com.sk2.smartfactory_bearingrul.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.Optional;
+
 @Service
+@RequiredArgsConstructor
 public class MemberService {
 
     private final EmployeeRepository employeeRepository;
     private final MemberRepository memberRepository;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public MemberService(EmployeeRepository employeeRepository, MemberRepository memberRepository) {
-        this.employeeRepository = employeeRepository;
-        this.memberRepository = memberRepository;
+    public MemberDto findByMemberIdAndPassword(String memberId, String password) {
+        return memberRepository.findByMemberIdAndPassword(memberId, password).map(MemberDto::from).orElse(null);
     }
 
     public void registerMember(MemberDto memberDto) {
