@@ -2,7 +2,6 @@ package com.sk2.smartfactory_bearingrul.dto;
 
 import com.sk2.smartfactory_bearingrul.entity.Member;
 import lombok.*;
-import org.springframework.security.core.userdetails.User;
 
 import java.time.LocalDateTime;
 
@@ -12,14 +11,16 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberDto {
+public class LoginMemberDto {
+    private String token;
     private String employeeId;
     private String memberId;
     private String password;
     private LocalDateTime createdAt;
 
-    public static MemberDto from(Member entity) {
-        return MemberDto.builder()
+    public static LoginMemberDto from(Member entity, String token) {
+        return LoginMemberDto.builder()
+                .token(token)
                 .employeeId(entity.getEmployeeId())
                 .memberId(entity.getMemberId())
                 .password(entity.getPassword())
