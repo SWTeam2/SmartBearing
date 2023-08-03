@@ -23,19 +23,12 @@ public class MemberController {
     public boolean checkRegistration(@RequestBody Map<String, String> requestData) {
         String employeeId = requestData.get("employeeId");
         String email = requestData.get("email");
-
         return memberService.checkRegistration(employeeId, email);
     }
 
     @PostMapping("/signup")
     public ResponseEntity registerMember(@RequestBody MemberPostDto memberPostDto) {
-        String employeeId = memberPostDto.getEmployeeId();
-        String email = memberPostDto.getEmail();
-        String memberId = memberPostDto.getMemberId();
-        String password = memberPostDto.getPassword();
-
-        memberService.registerMember(employeeId, email, memberId, password);
-
+        memberService.registerMember(memberPostDto);
         return new ResponseEntity<>(memberPostDto, HttpStatus.CREATED);
     }
 
