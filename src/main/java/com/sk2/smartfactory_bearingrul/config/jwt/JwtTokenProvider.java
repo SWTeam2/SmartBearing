@@ -1,64 +1,75 @@
 package com.sk2.smartfactory_bearingrul.config.jwt;
 
-import com.sk2.smartfactory_bearingrul.dto.MemberDto;
+import com.sk2.smartfactory_bearingrul.dto.LoginMemberDto;
+import com.sk2.smartfactory_bearingrul.service.LoginMemberService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Base64;
 import java.util.Date;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    private static final String SECRET_KEY = "NMA8JPctFuna59f5adlkjfnsakldfj134391kjdfaklj12i94898sd98f62jjfaijasfj1ji3jijdajfi9dfaj140dfj9fas9z9v9b992";
+    @Value("${jwt.secret}")
+    private String SECRET_KEY;
+    private final long tokenValidTime = 30 * 60 * 1000L; // 토큰 유효시간 = 30분
+    private final LoginMemberService loginMemberService;
 
-    public String create(MemberDto member) {
-        // 기한은 지금부터 1일로 설정
-        Date expiryDate = Date.from(
-                Instant.now()
-                        .plus(1, ChronoUnit.DAYS));
-        /*
-         *    ---- 토큰 구조 ----
-         *  { // header
-         *  	"alg" : "HS512"
-         *  },
-         *  { // payload
-         *  	"sub" : "40288093784915d201784916a40c0001",
-         *  	"iss" : "demo app",
-         *  	"iat" : 1595733657,
-         *  	"exp" : 1596597657
-         *  }.
-         *  // SECRET_KEY를 이용해 서명한 부분
-         *  Nn4d1MOVLZg79sfFACTIpCPKqWmpZMZQ.....
-         */
+    // 객체 초기화, SecretKey를 Base64로 인코딩
+    @PostConstruct
+    protected void init() {
+        SECRET_KEY = Base64.getEncoder().encodeToString(SECRET_KEY.getBytes());
+    }
 
-        // JWT Token 생성
+    // 토큰 생성
+    public String createToken(String memberId) {
         return Jwts.builder()
-                // header에 들어갈 내용 및 서명을 하기 위한 SECRET_KEY
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-                // payload에 들어갈 내용
-                .setSubject(member.getMemberId()) // sub
-                .setIssuer("demo app")            // iss
-                .setIssuedAt(new Date())        // iat
-                .setExpiration(expiryDate)        // exp
+                .setClaims(Jwts.claims().setSubject(memberId)) // 정보 저장
+                .setIssuedAt(new Date()) // 토큰 발행시간
+                .setExpiration(new Date(new Date().getTime() + tokenValidTime)) // 토큰 유효시간
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY) // 암호화 알고리즘, secret 값
                 .compact();
     }
 
-    public String validateAndGetUserId(String token) {
-        // parseClaimsJws 메서드가 Base64로 디코딩 및 파싱
-        // 헤더와 페이로드를 setSigningKey로 넘어온 시크릿을 이용해 서명한 후 token의 서명과 비교
-        // 위조되지 않았다면 페이로드(Claims) 리턴, 위조라면 예외를 날림
-        // 그중 우리는 userId가 필요하므로 getBody를 부른다
-        Claims claims = Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody();
-
-        return claims.getSubject(); // subject 즉 사용자 아이디를 리턴한다.
+    // 인증 정보 조회
+    public Authentication getAuthentication(String token) {
+        //Spring Security에서 제공하는 메서드 override해서 사용해야 함
+        LoginMemberDto loginMemberDto = loginMemberService.loadUserByUsername(this.getMemberId(token));
+        return new UsernamePasswordAuthenticationToken(loginMemberDto.toEntity(), "", loginMemberDto.getAuthorities());
     }
+
+    // 토큰에서 Member 정보 추출
+    public String getMemberId(String token) {
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    // 토큰 유효성, 만료일자 확인
+    public boolean validateToken(String token) {
+        try {
+            Jws<Claims> claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+            return !claims.getBody().getExpiration().before(new Date());
+        } catch (Exception e) {
+            log.debug(e.getMessage());
+            return false;
+        }
+    }
+
+    // Request의 Header에서 token 값 가져오기
+    public String resolveToken(HttpServletRequest request) {
+        return request.getHeader("Authorization");
+    }
+
 }
