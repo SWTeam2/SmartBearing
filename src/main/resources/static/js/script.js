@@ -9,7 +9,7 @@ function checkEmployee() {
         url: "/api/members/signup/check-employee",
         contentType: "application/json",
         data: JSON.stringify(requestData),
-        success: function(response) {
+        success: function (response) {
             if (response === true) {
                 alert('일치하는 사원 정보가 존재합니다.')
 
@@ -19,13 +19,17 @@ function checkEmployee() {
                 alert('일치하는 사원 정보가 존재하지 않습니다.')
             }
         },
-        error: function() {
+        error: function () {
             alert("사원 확인 중 오류가 발생했습니다.");
         }
     });
 }
 
 function login() {
+    window.location.href = "/dashboard";
+}
+
+function login1() {
     const requestData = {
         memberId: $("#id").val(),
         password: $("#password").val()
@@ -36,7 +40,7 @@ function login() {
         url: "/api/members/login",
         contentType: "application/json",
         data: JSON.stringify(requestData),
-        success: function(response) {
+        success: function (response) {
             // 서버로부터 반환된 JWT 토큰 값을 추출하여 jwtToken 변수에 저장
             const jwtToken = response;
 
@@ -44,20 +48,20 @@ function login() {
             $.ajax({
                 method: "GET",
                 url: "/dashboard",
-                beforeSend: function(xhr) {
+                beforeSend: function (xhr) {
                     xhr.setRequestHeader("Authorization", "Bearer " + jwtToken);
                 },
-                success: function(response) {
+                success: function (response) {
                     console.log(response);
                     // '/dashboard' 페이지를 성공적으로 불러왔을 때의 처리
                 },
-                error: function(response) {
+                error: function (response) {
                     console.log(response);
                     // Handle error response
                 }
             });
         },
-        error: function(response) {
+        error: function (response) {
             console.log(response);
             // Handle error response
         }

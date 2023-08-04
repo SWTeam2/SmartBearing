@@ -40,11 +40,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용 안 함. RESTful API는 보통 세션을 사용하지 않고, 토큰 기반의 인증을 사용하여 인증 정보를 전달
                 .and()
                 .authorizeRequests() // 요청에 대한 접근 권한을 설정
-                .mvcMatchers("/", "/css/**", "/js/**", "/images/**", "/*.ico").permitAll()
-                .antMatchers( "/", "/signup", "/api/members/login", "/api/members/signup/**").permitAll() // 인증 없이 접근 가능하도록 허용하는 엔드포인트
-                .antMatchers("/employee").hasRole("ADMIN")
-                .antMatchers("/**").hasAnyRole("ADMIN", "USER")
-                .anyRequest().authenticated(); //  나머지 모든 요청은 인증 필요
+                .antMatchers("/**").permitAll();
+//                .mvcMatchers("/", "/css/**", "/js/**", "/images/**", "/*.ico").permitAll()
+//                .antMatchers( "/", "/signup", "/api/members/login", "/api/members/signup/**").permitAll() // 인증 없이 접근 가능하도록 허용하는 엔드포인트
+//                .antMatchers("/employee").hasRole("ADMIN")
+//                .antMatchers("/**").hasAnyRole("ADMIN", "USER")
+//                .anyRequest().authenticated(); //  나머지 모든 요청은 인증 필요
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterAfter(jwtAuthenticationFilter, CorsFilter.class);
     }
