@@ -7,10 +7,16 @@ import com.sk2.smartfactory_bearingrul.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collection;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -18,23 +24,26 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
-    private final JwtTokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody RequestLoginMemberDto RequestLogin) {
-        MemberDto memberDto = memberService.findByMemberIdAndPassword(RequestLogin.getMemberId(), RequestLogin.getPassword());
+    public ResponseEntity<String> login(@RequestBody RequestLoginMemberDto requestLogin) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // 사용자의 id, pwd 일치할 경우
-        if(memberDto != null) {
-            // 토큰 생성
-            final String token = tokenProvider.create(memberDto);
-            return ResponseEntity.ok().body(LoginMemberDto.from(memberDto.toEntity(), token));
-        } else {
-            ResponseDto responseDto = ResponseDto.builder()
-                    .error("일치하는 회원이 없습니다.")
-                    .build();
-            return ResponseEntity.badRequest().body(responseDto);
+        // check
+        if (authentication != null && authentication.isAuthenticated()) {
+            // 사용자의 이름(username)을 가져옵니다.
+            String username = authentication.getName();
+
+            // 사용자가 가지고 있는 권한(authorities)을 가져옵니다.
+            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
+            // 권한 정보를 출력합니다.
+            for (GrantedAuthority authority : authorities) {
+                System.out.println(username);
+                System.out.println(authority.getAuthority());
+            }
         }
+        return ResponseEntity.ok(memberService.login(requestLogin));
     }
 
     @PostMapping("/signup/check-employee")

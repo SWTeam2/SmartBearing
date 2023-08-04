@@ -1,14 +1,14 @@
 package com.sk2.smartfactory_bearingrul.service;
 
 import com.sk2.smartfactory_bearingrul.config.jwt.JwtTokenProvider;
-import com.sk2.smartfactory_bearingrul.dto.MemberDto;
+import com.sk2.smartfactory_bearingrul.dto.RequestLoginMemberDto;
 import com.sk2.smartfactory_bearingrul.entity.Employee;
 import com.sk2.smartfactory_bearingrul.entity.Member;
 import com.sk2.smartfactory_bearingrul.repository.EmployeeRepository;
 import com.sk2.smartfactory_bearingrul.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -20,11 +20,19 @@ public class MemberService {
 
     private final EmployeeRepository employeeRepository;
     private final MemberRepository memberRepository;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public MemberDto findByMemberIdAndPassword(String memberId, String password) {
-        return memberRepository.findByMemberIdAndPassword(memberId, password).map(MemberDto::from).orElse(null);
+    @Transactional
+    public String login(RequestLoginMemberDto requestLogin) {
+        Member member = memberRepository.findByMemberId(requestLogin.getMemberId())
+                .orElseThrow(() -> new IllegalArgumentException("사원을 찾을 수 없습니다."));
+
+//        if (!passwordEncoder.matches(requestLogin.getPassword(), member.getPassword()))
+        if (!requestLogin.getPassword().equals(member.getPassword()))
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+
+        return jwtTokenProvider.createToken(member.getMemberId());
     }
 
     public void registerMember(MemberDto memberDto) {
@@ -37,6 +45,7 @@ public class MemberService {
                     .employeeId(memberDto.getEmployeeId())
                     .memberId(memberDto.getMemberId())
                     .password(memberDto.getPassword())
+//                    .password(passwordEncoder.encode(password))
                     .build();
 
             // member를 Member 테이블에 저장
@@ -46,6 +55,7 @@ public class MemberService {
             throw new IllegalArgumentException("사원을 찾을 수 없습니다.");
         }
     }
+
     public boolean checkRegistration(String employeeId, String email) {
         return employeeRepository.existsByEmployeeIdAndEmail(employeeId, email);
     }

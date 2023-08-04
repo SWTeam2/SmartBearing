@@ -13,4 +13,5 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     // memberId를 Member table에서 찾는 메서드
     boolean existsByMemberId(String memberId);
 
+    Optional<Member> findByMemberId(String memberId);
 }
