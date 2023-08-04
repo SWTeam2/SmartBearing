@@ -37,15 +37,31 @@ function login() {
         contentType: "application/json",
         data: JSON.stringify(requestData),
         success: function(response) {
-            console.log(response);
-            window.location.href = '/dashboard';
+            // 서버로부터 반환된 JWT 토큰 값을 추출하여 jwtToken 변수에 저장
+            const jwtToken = response;
+
+            // 이후의 코드는 동일하게 유지
+            $.ajax({
+                method: "GET",
+                url: "/dashboard",
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + jwtToken);
+                },
+                success: function(response) {
+                    console.log(response);
+                    // '/dashboard' 페이지를 성공적으로 불러왔을 때의 처리
+                },
+                error: function(response) {
+                    console.log(response);
+                    // Handle error response
+                }
+            });
         },
         error: function(response) {
             console.log(response);
             // Handle error response
         }
     });
-
 }
 
 function logout() {
