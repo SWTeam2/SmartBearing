@@ -4,6 +4,8 @@ import com.sk2.smartfactory_bearingrul.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface MemberRepository extends JpaRepository<Member, String> {
     // employeeId를 Member table에서 찾는 메서드
@@ -11,4 +13,5 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     // memberId를 Member table에서 찾는 메서드
     boolean existsByMemberId(String memberId);
 
+    Optional<Member> findByMemberId(String memberId);
 }
