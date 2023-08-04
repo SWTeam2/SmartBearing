@@ -1,8 +1,7 @@
 package com.sk2.smartfactory_bearingrul.controller;
 
-import com.sk2.smartfactory_bearingrul.config.jwt.JwtTokenProvider;
-import com.sk2.smartfactory_bearingrul.dto.*;
-import com.sk2.smartfactory_bearingrul.dto.MemberDto;
+import com.sk2.smartfactory_bearingrul.dto.RequestLoginMemberDto;
+import com.sk2.smartfactory_bearingrul.dto.RequestSignupMemberDto;
 import com.sk2.smartfactory_bearingrul.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -47,9 +45,9 @@ public class MemberController {
     }
 
     @PostMapping("/signup/check-employee")
-    public ResponseEntity<Boolean> checkRegistration(@RequestBody MemberDto memberDto) {
-        String employeeId = memberDto.getEmployeeId();
-        String email = memberDto.getEmail();
+    public ResponseEntity<Boolean> checkRegistration(@RequestBody RequestSignupMemberDto requestSignup) {
+        String employeeId = requestSignup.getEmployeeId();
+        String email = requestSignup.getEmail();
         Boolean checkRegistration = memberService.checkRegistration(employeeId, email);
         if (checkRegistration) {
             return ResponseEntity.ok(true);
@@ -59,14 +57,14 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity registerMember(@RequestBody MemberDto memberDto) {
-        memberService.registerMember(memberDto);
-        return new ResponseEntity<>(memberDto, HttpStatus.CREATED);
+    public ResponseEntity registerMember(@RequestBody RequestSignupMemberDto requestSignup) {
+        memberService.registerMember(requestSignup);
+        return new ResponseEntity<>(requestSignup, HttpStatus.CREATED);
     }
 
     @PostMapping("/signup/is-duplicated")
-    public ResponseEntity<Boolean> isDuplicated(@RequestBody MemberDto memberDto) {
-        String memberId = memberDto.getMemberId();
+    public ResponseEntity<Boolean> isDuplicated(@RequestBody RequestSignupMemberDto requestSignup) {
+        String memberId = requestSignup.getMemberId();
         boolean isDuplicated =  memberService.isDuplicated(memberId);
         if (isDuplicated) {
             return ResponseEntity.ok(true);
@@ -76,8 +74,8 @@ public class MemberController {
     }
 
     @PostMapping("/signup/is-existed")
-    public ResponseEntity<Boolean> isExisted(@RequestBody MemberDto memberDto) {
-        String employeeId = memberDto.getEmployeeId();
+    public ResponseEntity<Boolean> isExisted(@RequestBody RequestSignupMemberDto requestSignup) {
+        String employeeId = requestSignup.getEmployeeId();
         boolean isExisted = memberService.isExisted(employeeId);
         if (isExisted) {
             return ResponseEntity.ok(true);
