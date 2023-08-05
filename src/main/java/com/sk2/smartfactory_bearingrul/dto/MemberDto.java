@@ -2,7 +2,6 @@ package com.sk2.smartfactory_bearingrul.dto;
 
 import com.sk2.smartfactory_bearingrul.entity.Member;
 import lombok.*;
-import org.springframework.security.core.userdetails.User;
 
 import java.time.LocalDateTime;
 
