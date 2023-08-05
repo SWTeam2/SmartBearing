@@ -45,10 +45,12 @@ public class MemberService {
 
     @Transactional
     public void logout() {
-        LoginMemberDto loginMember = (LoginMemberDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (redisTemplate.opsForValue().get("JWT_TOKEN:" + loginMember.getMemberId()) != null) {
-            redisTemplate.delete("JWT_TOKEN:" + loginMember.getMemberId());
+        LoginMemberDto loginMember = LoginMemberDto.builder()
+                .member((Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+                .build();
+        
+        if (redisTemplate.opsForValue().get("JWT_TOKEN:" + loginMember.getUsername()) != null) {
+            redisTemplate.delete("JWT_TOKEN:" + loginMember.getUsername());
         }
     }
 
