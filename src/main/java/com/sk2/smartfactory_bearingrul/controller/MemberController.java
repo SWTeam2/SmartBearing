@@ -22,7 +22,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.login(requestLogin));
     }
 
-    @DeleteMapping("/logout")
+    @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest servletRequest) {
         memberService.logout();
         return ResponseEntity.ok().build();
