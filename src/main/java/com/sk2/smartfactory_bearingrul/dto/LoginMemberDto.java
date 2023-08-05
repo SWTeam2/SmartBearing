@@ -22,6 +22,7 @@ public class LoginMemberDto implements UserDetails {
     private String memberId;
     private String password;
     private LocalDateTime createAt;
+    private String department;
     private String position;
     private static final String ROLE_PREFIX = "ROLE_";
 
@@ -34,13 +35,14 @@ public class LoginMemberDto implements UserDetails {
                 .build();
     }
 
-    public static LoginMemberDto from(Member entity, String position) {
+    public static LoginMemberDto from(Member entity, String position, String department) {
         return LoginMemberDto.builder()
                 .employeeId(entity.getEmployeeId())
                 .memberId(entity.getMemberId())
                 .password(entity.getPassword())
                 .createAt(entity.getCreatedAt())
                 .position(position)
+                .department(department)
                 .build();
     }
 
