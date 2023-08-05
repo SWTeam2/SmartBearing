@@ -26,10 +26,6 @@ function checkEmployee() {
 }
 
 function login() {
-    window.location.href = "/dashboard";
-}
-
-function login1() {
     const requestData = {
         memberId: $("#id").val(),
         password: $("#password").val()
@@ -41,34 +37,41 @@ function login1() {
         contentType: "application/json",
         data: JSON.stringify(requestData),
         success: function (response) {
-            // 서버로부터 반환된 JWT 토큰 값을 추출하여 jwtToken 변수에 저장
             const jwtToken = response;
+            localStorage.setItem('token', jwtToken);
 
-            // 이후의 코드는 동일하게 유지
             $.ajax({
                 method: "GET",
                 url: "/dashboard",
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader("Authorization", "Bearer " + jwtToken);
+                    xhr.setRequestHeader("X-AUTH-TOKEN", localStorage.getItem('token'));
                 },
                 success: function (response) {
                     console.log(response);
-                    // '/dashboard' 페이지를 성공적으로 불러왔을 때의 처리
                 },
                 error: function (response) {
                     console.log(response);
-                    // Handle error response
                 }
             });
         },
         error: function (response) {
             console.log(response);
-            // Handle error response
         }
     });
 }
 
 function logout() {
-    // 로그아웃 과정 수행
-    window.location.href = '/';
+    $.ajax({
+        method: "POST",
+        url: "/api/members/logout",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-AUTH-TOKEN", localStorage.getItem('token'));
+        },
+        success: function (response) {
+            location.href = "/";
+        },
+        error: function (response) {
+            console.log(response);
+        }
+    });
 }
