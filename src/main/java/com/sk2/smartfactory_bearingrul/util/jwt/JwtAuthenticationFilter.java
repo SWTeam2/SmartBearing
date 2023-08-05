@@ -1,8 +1,10 @@
-package com.sk2.smartfactory_bearingrul.config.jwt;
+package com.sk2.smartfactory_bearingrul.util.jwt;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -22,6 +24,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
     @Autowired
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -30,8 +33,14 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         //토큰이 유효하다면
         if (token != null && jwtTokenProvider.validateToken(token)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String key = "JWT_TOKEN:" + jwtTokenProvider.getMemberId(token);
+            String storedToken = redisTemplate.opsForValue().get(key);
+
+            //로그인 여부 체크
+            if (redisTemplate.hasKey(key) && storedToken != null) {
+                Authentication authentication = jwtTokenProvider.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
 
         //다음 Filter 실행
