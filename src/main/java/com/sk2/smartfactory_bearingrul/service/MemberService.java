@@ -1,20 +1,20 @@
 package com.sk2.smartfactory_bearingrul.service;
 
-import com.sk2.smartfactory_bearingrul.config.jwt.JwtTokenProvider;
-import com.sk2.smartfactory_bearingrul.dto.MemberDto;
+import com.sk2.smartfactory_bearingrul.dto.LoginMemberDto;
 import com.sk2.smartfactory_bearingrul.dto.RequestLoginMemberDto;
 import com.sk2.smartfactory_bearingrul.dto.RequestSignupMemberDto;
 import com.sk2.smartfactory_bearingrul.entity.Employee;
 import com.sk2.smartfactory_bearingrul.entity.Member;
 import com.sk2.smartfactory_bearingrul.repository.EmployeeRepository;
 import com.sk2.smartfactory_bearingrul.repository.MemberRepository;
+import com.sk2.smartfactory_bearingrul.util.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,16 +24,32 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final RedisTemplate redisTemplate;
 
     @Transactional
     public String login(RequestLoginMemberDto requestLogin) {
+        // 로그인 인증
         Member member = memberRepository.findByMemberId(requestLogin.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("사원을 찾을 수 없습니다."));
-
         if (!passwordEncoder.matches(requestLogin.getPassword(), member.getPassword()))
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
 
-        return jwtTokenProvider.createToken(member.getMemberId());
+        // 토큰 생성
+        String token = jwtTokenProvider.createToken(member.getMemberId());
+
+        // 레디스에 토큰 저장
+        redisTemplate.opsForValue().set("JWT_TOKEN:" + requestLogin.getMemberId(), token);
+
+        return token;
+    }
+
+    @Transactional
+    public void logout() {
+        LoginMemberDto loginMember = (LoginMemberDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (redisTemplate.opsForValue().get("JWT_TOKEN:" + loginMember.getMemberId()) != null) {
+            redisTemplate.delete("JWT_TOKEN:" + loginMember.getMemberId());
+        }
     }
 
     public void registerMember(RequestSignupMemberDto requestSignup) {
