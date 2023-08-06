@@ -1,5 +1,16 @@
 version: "3.8"
 services:
+  frontend:
+    container_name: smartbearing-frontend
+    command: npm start # 컨테이너가 실행될 때 실행할 명령
+    build:
+      dockerfile: Dockerfile
+      context: ./src/main/frontend
+    restart: always
+    image: smartbaering-frontend
+    ports:
+      - "3000:3000"
+    stdin_open: true
   db:
     container_name: smartbearing-database
     build:
