@@ -1,9 +1,10 @@
 import React from 'react';
-import './App.css'; // 스타일을 위한 Login.css 파일을 가정합니다.
+import '../App.css';
+import logo from '../images/logo_O.png';
 
 const Login = () => {
     const login = () => {
-        // 로그인 기능을 여기에 추가합니다.
+        // 로그인 기능
     };
 
     return (
@@ -11,7 +12,7 @@ const Login = () => {
             <div className="center-outer-div">
                 <div className="center-inner-div">
                     <div style={{ width: '220px', padding: '40px', marginBottom: '25px' }}>
-                        <img src="images/logo_O.png" width="100%" alt="로고" />
+                        <img src={logo} width="100%" alt="로고" />
                     </div>
                     <div>
                         <input className="center-box-input" id="id" placeholder="아이디" />
@@ -30,3 +31,4 @@ const Login = () => {
 };
 
 export default Login;
+// TODO : 로그인 기능 연결, 로고 불러오기, 화면 중앙 정렬
