@@ -27,6 +27,6 @@ public class LoginMemberService implements UserDetailsService {
         Employee employee = employeeRepository.findById(member.getEmployeeId())
                 .orElseThrow(() -> new IllegalArgumentException("일치하는 회원이 없습니다."));
 
-        return LoginMemberDto.from(member, employee.getPosition());
+        return LoginMemberDto.from(member, employee.getPosition(), employee.getDepartment());
     }
 }

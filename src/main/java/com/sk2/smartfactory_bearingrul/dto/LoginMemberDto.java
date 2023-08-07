@@ -18,29 +18,25 @@ import java.util.Collection;
 @AllArgsConstructor
 public class LoginMemberDto implements UserDetails {
 
-    private String employeeId;
-    private String memberId;
-    private String password;
-    private LocalDateTime createAt;
+    private Member member;
+    private String department;
     private String position;
     private static final String ROLE_PREFIX = "ROLE_";
 
     public Member toEntity() {
         return Member.builder()
-                .employeeId(employeeId)
-                .memberId(memberId)
-                .password(password)
-                .createdAt(createAt)
+                .employeeId(member.getEmployeeId())
+                .memberId(member.getMemberId())
+                .password(member.getPassword())
+                .createdAt(member.getCreatedAt())
                 .build();
     }
 
-    public static LoginMemberDto from(Member entity, String position) {
+    public static LoginMemberDto from(Member entity, String position, String department) {
         return LoginMemberDto.builder()
-                .employeeId(entity.getEmployeeId())
-                .memberId(entity.getMemberId())
-                .password(entity.getPassword())
-                .createAt(entity.getCreatedAt())
+                .member(entity)
                 .position(position)
+                .department(department)
                 .build();
     }
 
@@ -48,7 +44,6 @@ public class LoginMemberDto implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
 
-        // Check the position and add corresponding role
         if ("관리자".equals(position)) {
             authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + "ADMIN"));
         } else {
@@ -60,12 +55,12 @@ public class LoginMemberDto implements UserDetails {
 
     @Override
     public String getUsername() {
-        return memberId;
+        return member.getMemberId();
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return member.getPassword();
     }
 
     @Override

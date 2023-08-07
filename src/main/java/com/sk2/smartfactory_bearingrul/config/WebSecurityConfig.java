@@ -1,10 +1,12 @@
 package com.sk2.smartfactory_bearingrul.config;
 
-import com.sk2.smartfactory_bearingrul.config.jwt.JwtAuthenticationFilter;
+import com.sk2.smartfactory_bearingrul.util.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -12,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
+@Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -29,6 +32,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    // 정적인 파일에 대한 요청들
+    private static final String[] AUTH_WHITELIST = {
+            // -- swagger ui
+            "/configuration/ui",
+            "/configuration/security",
+            "/webjars/**",
+            "/file/**",
+            "/css/**", "/js/**", "/images/**", "/*.ico",
+            "/", "/signup"
+    };
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors()
@@ -40,13 +54,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용 안 함. RESTful API는 보통 세션을 사용하지 않고, 토큰 기반의 인증을 사용하여 인증 정보를 전달
                 .and()
                 .authorizeRequests() // 요청에 대한 접근 권한을 설정
-                .antMatchers("/**").permitAll();
-//                .mvcMatchers("/", "/css/**", "/js/**", "/images/**", "/*.ico").permitAll()
-//                .antMatchers( "/", "/signup", "/api/members/login", "/api/members/signup/**").permitAll() // 인증 없이 접근 가능하도록 허용하는 엔드포인트
-//                .antMatchers("/employee").hasRole("ADMIN")
-//                .antMatchers("/**").hasAnyRole("ADMIN", "USER")
-//                .anyRequest().authenticated(); //  나머지 모든 요청은 인증 필요
+                .antMatchers("/v3/api-docs/**", "/swagger/**", "/swagger-ui", "/swagger-ui/**", "/swagger-resources/**").permitAll() // 인증 없이 접근 가능하도록 허용하는 엔드포인트
+                .antMatchers("/api/members/login", "/api/members/signup/**").permitAll() // 인증 없이 접근 가능하도록 허용하는 엔드포인트
+                .antMatchers("/employee").hasRole("ADMIN")
+                .anyRequest().authenticated(); //  나머지 모든 요청은 인증 필요
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterAfter(jwtAuthenticationFilter, CorsFilter.class);
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+        // 정적인 파일 요청에 대해 무시
+        web.ignoring().antMatchers(AUTH_WHITELIST);
     }
 }

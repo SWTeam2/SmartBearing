@@ -1,7 +1,18 @@
 version: "3.8"
 services:
+  frontend:
+    container_name: smartbearing-frontend
+    command: npm start # 컨테이너가 실행될 때 실행할 명령
+    build:
+      dockerfile: Dockerfile
+      context: ./src/main/frontend
+    restart: always
+    image: smartbaering-frontend
+    ports:
+      - "3000:3000"
+    stdin_open: true
   db:
-    container_name: database
+    container_name: smartbearing-database
     build:
       dockerfile: Dockerfile
       context: ./database
@@ -22,3 +33,15 @@ services:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
     restart: always
+  redis:
+    container_name: smartbearing-redis
+    build:
+      dockerfile: Dockerfile
+      context: ./redis
+    image: smartbaering-redis
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    platform: linux/amd64
+    ports:
+      - "6379:6379"
