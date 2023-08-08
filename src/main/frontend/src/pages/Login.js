@@ -19,9 +19,9 @@ const Login = () => {
             });
 
             if (response.ok) {
-                localStorage.setItem('token', response.body);
-                console.log(localStorage.getItem('token'));
-                history.push('/dashboard'); // 문제 부분2 ??
+                const token = await response.text();
+                localStorage.setItem('token', token);
+                history('/dashboard');
             } else {
                 console.log('로그인 실패');
                 alert("로그인에 실패하였습니다.");
