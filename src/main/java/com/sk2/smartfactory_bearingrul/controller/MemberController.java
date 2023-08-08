@@ -59,9 +59,6 @@ public class MemberController {
     @ApiOperation(value = "회원 가입", notes = "회원 가입 인증 과정을 거친 후 입력 받은 정보를 바탕으로 회원을 생성합니다.")
     @PostMapping("/signup")
     public ResponseEntity registerMember(@RequestBody RequestSignupMemberDto requestSignup) {
-        System.out.println("requestSignup = " + requestSignup.getEmployeeId());
-        System.out.println("requestSignup.getMemberId() = " + requestSignup.getMemberId());
-        System.out.println("requestSignup.getPassword() = " + requestSignup.getPassword());
         memberService.registerMember(requestSignup);
         return new ResponseEntity<>(requestSignup, HttpStatus.CREATED);
     }
