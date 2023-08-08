@@ -9,42 +9,59 @@ const Login = () => {
     const history = useNavigate();
 
     const login = async () => {
-        console.log(id);
-        console.log(password);
         try {
-            const response = await fetch('api/members/login', {
+            const response = await fetch('/api/members/login', {
                 method: 'POST',
                 headers: {
-                    'Content-Type' : 'application/json'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({memberId: id, password: password})
             });
 
-            if(response.ok) {
-                history.push('/dashboard');
+            if (response.ok) {
+                localStorage.setItem('token', response.body);
+                console.log(localStorage.getItem('token'));
+                history.push('/dashboard'); // 문제 부분2 ??
             } else {
                 console.log('로그인 실패');
+                alert("로그인에 실패하였습니다.");
+                setId('');
+                setPassword('');
             }
-        } catch(error) {
+        } catch (error) {
             console.error('로그인 에러', error);
         }
     };
 
     return (
-        <div style={{ backgroundColor: '#F2F4F8', width: '100%', height: '100%', margin: 0 }}>
+        <div style={{backgroundColor: '#F2F4F8', width: '100%', height: '100%', margin: 0}}>
             <div className="center-outer-div">
                 <div className="center-inner-div">
-                    <div style={{ width: '220px', padding: '40px', height: '100px', marginBottom: '25px' }}>
-                        <img src={logo} width="100%" alt="로고" />
+                    <div style={{width: '220px', padding: '40px', height: '100px', marginBottom: '25px'}}>
+                        <img src={logo} width="100%" alt="로고"/>
                     </div>
                     <div>
-                        <input className="center-box-input" id="id" placeholder="아이디" />
-                        <input className="center-box-input" id="password" placeholder="비밀번호" type="password" />
+                        <input
+                            className="center-box-input"
+                            id="id"
+                            placeholder="Id"
+                            value={id}
+                            onChange={(e) => setId(e.target.value)}
+                        />
+                        <input
+                            className="center-box-input"
+                            id="password"
+                            placeholder="Password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                         <button className="center-box-btn bg-blue" type="button" onClick={login}>
-                            로그인
+                            LOGIN
                         </button>
-                        <button className="center-box-btn bg-charcoal" type="button" onClick={() => (window.location.href = '/signup')}>
-                            회원가입
+                        <button className="center-box-btn bg-charcoal" type="button"
+                                onClick={() => (window.location.href = '/signup')}>
+                            SIGN UP
                         </button>
                     </div>
                 </div>
