@@ -76,17 +76,27 @@ const Employee = () => {
             <div style={{width: '82vw', height: '100vh'}}>
                 <div className="row" style={{margin: '3% 4%'}}>
                     <div className="layout-title">Employee Management</div>
-                    <div className="row row-row cursor-pointer">
-                        <div>NEW</div>
-                        <div>EDIT</div>
-                        <div>DELETE</div>
+                    <div className="row cursor-pointer" style={{marginRight: '10%'}}>
+                        <button className="employee-btn" type="button"
+                                onClick={() => (window.location.href = '/employee/create')}>
+                            NEW
+                        </button>
+                        <button className="employee-btn" type="button"
+                                onClick={() => (window.location.href = '/employee/update')}>
+                            EDIT
+                        </button>
+                        <button className="employee-btn" type="button"
+                                onClick={() => (window.location.href = '')}>
+                            DELETE
+                        </button>
                     </div>
                 </div>
 
                 <div style={{height: '84vh', overflow: 'auto'}}>
                     <div className="main-title-row drag-prevent">
+                        <div style={{width: '3%'}}></div>
                         <div style={{width: '15%'}}>Employee ID</div>
-                        <div style={{width: '15%'}}>Name</div>
+                        <div style={{width: '12%'}}>Name</div>
                         <div style={{width: '15%'}}>Department</div>
                         <div style={{width: '10%'}}>Position</div>
                         <div style={{width: '10%'}}>In Charge</div>
@@ -94,8 +104,9 @@ const Employee = () => {
                         <div style={{width: '15%'}}>Phone</div>
                     </div>
                     <div className="main-row drag-prevent">
+                        <div style={{width: '3%'}}></div>
                         <div style={{width: '15%'}}>1001</div>
-                        <div style={{width: '15%'}}>홍길동</div>
+                        <div style={{width: '12%'}}>홍길동</div>
                         <div style={{width: '15%'}}>데이터 분석</div>
                         <div style={{width: '10%'}}>관리자</div>
                         <div style={{width: '10%'}}></div>
@@ -103,8 +114,9 @@ const Employee = () => {
                         <div style={{width: '15%'}}>010-0000-0000</div>
                     </div>
                     <div className="main-row drag-prevent">
+                        <div style={{width: '3%'}}></div>
                         <div style={{width: '15%'}}>1002</div>
-                        <div style={{width: '15%'}}>홍길순</div>
+                        <div style={{width: '12%'}}>홍길순</div>
                         <div style={{width: '15%'}}>데이터 분석</div>
                         <div style={{width: '10%'}}>사원</div>
                         <div style={{width: '10%'}}>데이터1</div>
