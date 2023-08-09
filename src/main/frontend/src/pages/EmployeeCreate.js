@@ -78,7 +78,17 @@ const EmployeeCreate = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({employeeId, name, birthday, gender, phone, email, department, position, inCharge}),
+                body: JSON.stringify({
+                    employeeId,
+                    name,
+                    birthday,
+                    gender,
+                    phone,
+                    email,
+                    department,
+                    position,
+                    inCharge
+                }),
             });
 
             if (newEmployee.status === 201) {

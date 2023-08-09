@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import '../App.css';
 import EmployeeRow from './EmployeeRow.js';
 
@@ -128,7 +128,7 @@ const Employee = () => {
                         <div style={{width: '15%'}}>Phone</div>
                     </div>
                     {employeeData.map((employee) => (
-                        <EmployeeRow key={employee.employeeId} employee={employee} />
+                        <EmployeeRow key={employee.employeeId} employee={employee}/>
                     ))}
                 </div>
             </div>
