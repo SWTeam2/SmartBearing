@@ -1,10 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../App.css';
+import EmployeeRow from './EmployeeRow.js';
 
 const Employee = () => {
     const logout = () => {
         // 로그아웃 기능을 여기에 추가합니다.
     };
+
+    const [employeeData, setEmployeeData] = useState([]);
+
+    const getEmployees = async () => {
+        try {
+            const employees = await fetch('/api/employees', {
+                method: 'GET'
+            });
+
+            if (employees.ok) {
+                const employeesData = await employees.json();
+                setEmployeeData(employeesData);
+            } else {
+                console.log('사원 목록 불러오기 실패');
+            }
+        } catch (error) {
+            console.error('사원 목록 불러오기 에러 - ', error);
+        }
+    };
+
+    useEffect(() => {
+        getEmployees();
+    }, []);
 
     return (
         <div style={{display: 'flex', backgroundColor: '#F2F4F8', height: '100vh'}}>
@@ -103,26 +127,9 @@ const Employee = () => {
                         <div style={{width: '20%'}}>Email</div>
                         <div style={{width: '15%'}}>Phone</div>
                     </div>
-                    <div className="main-row drag-prevent">
-                        <div style={{width: '3%'}}></div>
-                        <div style={{width: '15%'}}>1001</div>
-                        <div style={{width: '12%'}}>홍길동</div>
-                        <div style={{width: '15%'}}>데이터 분석</div>
-                        <div style={{width: '10%'}}>관리자</div>
-                        <div style={{width: '10%'}}></div>
-                        <div style={{width: '20%'}}>hgd@gmail.com</div>
-                        <div style={{width: '15%'}}>010-0000-0000</div>
-                    </div>
-                    <div className="main-row drag-prevent">
-                        <div style={{width: '3%'}}></div>
-                        <div style={{width: '15%'}}>1002</div>
-                        <div style={{width: '12%'}}>홍길순</div>
-                        <div style={{width: '15%'}}>데이터 분석</div>
-                        <div style={{width: '10%'}}>사원</div>
-                        <div style={{width: '10%'}}>데이터1</div>
-                        <div style={{width: '20%'}}>hgs@gmail.com</div>
-                        <div style={{width: '15%'}}>010-0000-0001</div>
-                    </div>
+                    {employeeData.map((employee) => (
+                        <EmployeeRow key={employee.employeeId} employee={employee} />
+                    ))}
                 </div>
             </div>
         </div>
