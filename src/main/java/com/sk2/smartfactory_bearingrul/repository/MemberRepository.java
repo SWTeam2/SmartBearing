@@ -8,10 +8,14 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, String> {
-    // employeeId를 Member table에서 찾는 메서드
+
+    // employeeId를 통해 Member 존재 여부를 반환하는 메서드
     boolean existsByEmployeeId(String employeeId);
-    // memberId를 Member table에서 찾는 메서드
+
+    // memberId를 통해 Member 존재 여부를 반환하는 메서드
     boolean existsByMemberId(String memberId);
+
+    Optional<Member> findByEmployeeId(String employeeId);
 
     Optional<Member> findByMemberId(String memberId);
 }
