@@ -59,7 +59,7 @@ const Dashboard = () => {
                 </div>
 
                 <div
-                    style={{position: 'fixed', bottom: '2vh', left: '4vw', width: '18vw'}}
+                    style={{position: 'fixed', bottom: '2vh', left: '3.8vw', width: '18vw'}}
                     onClick={logout}
                     className="cursor-pointer"
                 >
@@ -74,7 +74,7 @@ const Dashboard = () => {
 
             {/* main */}
             <div style={{width: '82vw', height: '100vh'}}>
-                <div className="layout-title">Dashboard</div>
+                <div className="layout-title" style={{margin: '3% 4%'}}>Dashboard</div>
             </div>
         </div>
     );

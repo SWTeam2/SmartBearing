@@ -125,7 +125,7 @@ const Signup = () => {
                                 id="business_email"
                                 className="center-box-input"
                                 placeholder="Business Email"
-                                style={{display: 'inline-block', width: '154px', marginRight: '5px'}}
+                                style={{display: 'inline-block', width: '154px', marginRight: '9px'}}
                                 disabled={isDisabled_post}
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
