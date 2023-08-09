@@ -38,17 +38,18 @@ public class EmployeeController {
         return ResponseEntity.status(201).build();
     }
 
+    @ApiOperation(value = "사원 수정", notes = "사원의 연락처, 부서, 직급, 담당을 수정합니다.")
+    @PutMapping("/{employeeId}")
+    public ResponseEntity<Void> updateEmployee(@PathVariable String employeeId, @RequestBody EmployeeDto employeeDto) {
+        System.out.println("employeeId = " + employeeId);
+        employeeService.updateEmployee(employeeId, employeeDto);
+        return ResponseEntity.ok().build();
+    }
+
     @ApiOperation(value = "사원 삭제", notes = "입력 받은 사원 아이디에 해당하는 사원을 삭제합니다.")
     @DeleteMapping("/{employeeId}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable String employeeId) {
         employeeService.deleteEmployee(employeeId);
-        return ResponseEntity.ok().build();
-    }
-
-    @ApiOperation(value = "사원 수정", notes = "사원의 연락처, 부서, 직급, 담당을 수정합니다.")
-    @PutMapping("/{employeeId}")
-    public ResponseEntity<Void> updateEmployee(@PathVariable String employeeId, @RequestBody EmployeeDto employeeDto) {
-        employeeService.updateEmployee(employeeId, employeeDto);
         return ResponseEntity.ok().build();
     }
 }
