@@ -33,7 +33,7 @@ const Dashboard = () => {
                     <div className="sidebar-text">이름</div>
                 </div>
 
-                <div style={{height: '1px', margin: '10% 10 %', background: 'black'}}></div>
+                <div style={{height: '1px', margin: '10% 10%', background: 'black'}}></div>
 
                 <div
                     className="sidebar-row drag-prevent cursor-pointer hover-bg-grey"
