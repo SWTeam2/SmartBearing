@@ -2,7 +2,6 @@ import React, {useState, useEffect} from "react";
 import '../App.css';
 
 const EmployeeUpdate = () => {
-    const [employee, setEmployee] = useState('');
     const [name, setName] = useState('');
     const [birthday, setBirthday] = useState('');
     const [gender, setGender] = useState('');
@@ -39,7 +38,7 @@ const EmployeeUpdate = () => {
     const [selectedEmployee, setSelectedEmployee] = useState('');
 
     useEffect(() => {
-        const selectedEmp = employeeData.find(emp => emp.employeeId === employee);
+        const selectedEmp = employeeData.find(emp => emp.employeeId === selectedEmployee);
         if (selectedEmp) {
             setName(selectedEmp.name);
             setBirthday(selectedEmp.birthday);
@@ -51,16 +50,16 @@ const EmployeeUpdate = () => {
             setInCharge(selectedEmp.inCharge);
             setIsDisabled_pre(false);
         }
-    }, [employee, employeeData]);
+    }, [selectedEmployee, employeeData]);
 
     const handleEmployeeChange = (event) => {
-        setEmployee(event.target.value);
+        setSelectedEmployee(event.target.value);
     };
 
     const updateEmployee = async (e) => {
         e.preventDefault();
 
-        if (!employee) {
+        if (!selectedEmployee) {
             alert('사원을 선택해주세요.');
             return;
         } else if (!phone) {
@@ -75,7 +74,7 @@ const EmployeeUpdate = () => {
         }
 
         try {
-            const updateEmployee = await fetch(`/api/employees/${employee}`, {
+            const updateEmployee = await fetch(`/api/employees/${selectedEmployee}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
