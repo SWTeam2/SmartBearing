@@ -83,7 +83,7 @@ const EmployeeDelete = () => {
             <div className="center-outer-div">
                 <div className="center-inner-div" style={{textAlign: 'center'}}>
                     <div className="center-box-title"
-                         style={{width: '300px', textAlign: 'center', marginBottom: '70px'}}>
+                         style={{width: '300px', textAlign: 'center', marginBottom: '70px', fontSize: '38px'}}>
                         Delete Employee
                     </div>
 
