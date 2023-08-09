@@ -110,7 +110,7 @@ const Employee = () => {
                             EDIT
                         </button>
                         <button className="employee-btn" type="button"
-                                onClick={() => (window.location.href = '')}>
+                                onClick={() => (window.location.href = '/employee/delete')}>
                             DELETE
                         </button>
                     </div>
