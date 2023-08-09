@@ -15,6 +15,10 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
 
+    public boolean checkRegistration(EmployeeDto employeeDto) {
+        return employeeRepository.existsByEmployeeId(employeeDto.getEmployeeId());
+    }
+
     public void registerEmployee(EmployeeDto employeeDto) {
         if (employeeRepository.existsByEmployeeId(employeeDto.getEmployeeId())) {
             throw new IllegalStateException("중복된 사원번호입니다.");
