@@ -8,6 +8,16 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const history = useNavigate();
 
+    const handleKeyDown = (event) => {
+        const key = event.code;
+        switch(key) {
+            case 'Enter':
+                login();
+            break;
+            default:
+        }
+    }
+
     const login = async () => {
         try {
             const response = await fetch('/api/members/login', {
@@ -47,6 +57,7 @@ const Login = () => {
                             placeholder="Id"
                             value={id}
                             onChange={(e) => setId(e.target.value)}
+                            onKeyDown={handleKeyDown}
                         />
                         <input
                             className="center-box-input"
@@ -55,6 +66,7 @@ const Login = () => {
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            onKeyDown={handleKeyDown}
                         />
                         <button className="center-box-btn bg-blue" type="button" onClick={login}>
                             LOGIN
