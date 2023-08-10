@@ -2,11 +2,14 @@ package com.sk2.smartfactory_bearingrul.service;
 
 import com.sk2.smartfactory_bearingrul.dto.EmployeeDto;
 import com.sk2.smartfactory_bearingrul.entity.Employee;
+import com.sk2.smartfactory_bearingrul.entity.Member;
 import com.sk2.smartfactory_bearingrul.repository.EmployeeRepository;
+import com.sk2.smartfactory_bearingrul.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -14,6 +17,16 @@ import java.util.stream.Collectors;
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final MemberRepository memberRepository;
+
+    public List<EmployeeDto> getAllEmployees() {
+        List<Employee> employees = employeeRepository.findAll();
+        return employees.stream().map(EmployeeDto::from).collect(Collectors.toList());
+    }
+
+    public boolean checkRegistration(EmployeeDto employeeDto) {
+        return employeeRepository.existsByEmployeeId(employeeDto.getEmployeeId());
+    }
 
     public void registerEmployee(EmployeeDto employeeDto) {
         if (employeeRepository.existsByEmployeeId(employeeDto.getEmployeeId())) {
@@ -21,18 +34,6 @@ public class EmployeeService {
         }
 
         employeeRepository.save(employeeDto.toEntity());
-    }
-
-    public List<EmployeeDto> getAllEmployees() {
-        List<Employee> employees = employeeRepository.findAll();
-        return employees.stream().map(EmployeeDto::from).collect(Collectors.toList());
-    }
-
-    public void deleteEmployee(String employeeId) {
-        Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사원입니다."));
-
-        employeeRepository.delete(employee);
     }
 
     public void updateEmployee(String employeeId, EmployeeDto updateEmployeeDto) {
@@ -43,5 +44,16 @@ public class EmployeeService {
         employeeDto.updateFields(updateEmployeeDto);
 
         employeeRepository.save(employeeDto.toEntity());
+    }
+
+    public void deleteEmployee(String employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사원입니다."));
+
+        employeeRepository.delete(employee);
+
+        // 해당 사원번호로 가입한 member가 있으면 삭제
+        Optional<Member> member = memberRepository.findByEmployeeId(employeeId);
+        member.ifPresent(memberRepository::delete);
     }
 }
