@@ -104,7 +104,7 @@ const Employee = () => {
             </div>
 
             {/* main */}
-            <div style={{width: '82vw', height: '100vh'}}>
+            <div style={{width: '82vw', height: '100vh', overflow: 'auto'}}>
                 <div className="row" style={{margin: '3% 4%'}}>
                     <div className="layout-title">Employee Management</div>
                     <div className="row cursor-pointer" style={{marginRight: '10%'}}>
@@ -123,21 +123,19 @@ const Employee = () => {
                     </div>
                 </div>
 
-                <div style={{height: '84vh', overflow: 'auto'}}>
-                    <div className="main-title-row drag-prevent">
-                        <div style={{width: '3%'}}></div>
-                        <div style={{width: '15%'}}>Employee ID</div>
-                        <div style={{width: '12%'}}>Name</div>
-                        <div style={{width: '15%'}}>Department</div>
-                        <div style={{width: '10%'}}>Position</div>
-                        <div style={{width: '10%'}}>In Charge</div>
-                        <div style={{width: '20%'}}>Email</div>
-                        <div style={{width: '15%'}}>Phone</div>
-                    </div>
-                    {employeeData.map((employee) => (
-                        <EmployeeRow key={employee.employeeId} employee={employee}/>
-                    ))}
+                <div className="main-title-row drag-prevent">
+                    <div style={{width: '3%'}}></div>
+                    <div style={{width: '15%'}}>Employee ID</div>
+                    <div style={{width: '12%'}}>Name</div>
+                    <div style={{width: '15%'}}>Department</div>
+                    <div style={{width: '10%'}}>Position</div>
+                    <div style={{width: '10%'}}>In Charge</div>
+                    <div style={{width: '20%'}}>Email</div>
+                    <div style={{width: '15%'}}>Phone</div>
                 </div>
+                {employeeData.map((employee) => (
+                    <EmployeeRow key={employee.employeeId} employee={employee}/>
+                ))}
             </div>
         </div>
     );
