@@ -1,16 +1,5 @@
 version: "3.8"
 services:
-  frontend:
-    container_name: smartbearing-frontend
-    command: npm start # 컨테이너가 실행될 때 실행할 명령
-    build:
-      dockerfile: Dockerfile
-      context: ./src/main/frontend
-    restart: always
-    image: smartbaering-frontend
-    ports:
-      - "3000:3000"
-    stdin_open: true
   db:
     container_name: smartbearing-database
     build:
@@ -21,12 +10,12 @@ services:
     environment:
       - MYSQL_DATABASE=smartbearing
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
-      - MYSQL_USER=${DB_USER}
-      - MYSQL_PASSWORD=${DB_USER_PASSWORD}
       - TZ=Asia/Seoul
     volumes:
+      - ./database/config/mysql.cnf:/etc/mysql/my.cnf
       - ./database/config:/etc/mysql/conf.d
       - ./database/init:/docker-entrypoint-initdb.d
+      - /etc/localtime:/etc/localtime:ro
     ports:
       - "3306:3306"
     command:
@@ -44,4 +33,4 @@ services:
       - "mode=standalone"
     platform: linux/amd64
     ports:
-      - "6379:6379"
+      - "6380:6379"
