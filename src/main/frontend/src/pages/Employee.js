@@ -1,6 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import '../App.css';
 import EmployeeRow from './EmployeeRow.js';
+import logo_X from "../images/logo_X.png";
+import label from "../images/label.png";
+import folders from "../images/folders.png";
+import user from "../images/user.png";
+import chart from "../images/chart.png";
+import bell from "../images/bell.png";
+import logoutImg from "../images/logout.png";
 
 const Employee = () => {
     const logout = () => {
@@ -35,24 +42,24 @@ const Employee = () => {
             {/* 사이드바 */}
             <div style={{background: 'white', width: '18vw', height: '100%'}}>
                 <div style={{padding: '15%'}}>
-                    <img src="images/logo_X.png" width="100%" alt="로고"/>
+                    <img src={logo_X} width="100%" alt="로고"/>
                 </div>
 
                 <div className="sidebar-row drag-prevent">
                     <div className="sidebar-icon">
-                        <img src="images/label.png" width="100%" alt="아이콘"/>
+                        <img src={label} width="100%" alt="아이콘"/>
                     </div>
                     <div className="sidebar-text">사원코드</div>
                 </div>
                 <div className="sidebar-row drag-prevent">
                     <div className="sidebar-icon">
-                        <img src="images/folders.png" width="100%" alt="아이콘"/>
+                        <img src={folders} width="100%" alt="아이콘"/>
                     </div>
                     <div className="sidebar-text">부서</div>
                 </div>
                 <div className="sidebar-row drag-prevent">
                     <div className="sidebar-icon">
-                        <img src="images/user.png" width="100%" alt="아이콘"/>
+                        <img src={user} width="100%" alt="아이콘"/>
                     </div>
                     <div className="sidebar-text">이름</div>
                 </div>
@@ -66,7 +73,7 @@ const Employee = () => {
                     }}
                 >
                     <div className="sidebar-icon">
-                        <img src="images/chart.png" width="100%" alt="아이콘"/>
+                        <img src={chart} width="100%" alt="아이콘"/>
                     </div>
                     <div className="sidebar-text">Dashboard</div>
                 </div>
@@ -77,7 +84,7 @@ const Employee = () => {
                     }}
                 >
                     <div className="sidebar-icon">
-                        <img src="images/bell.png" width="100%" alt="아이콘"/>
+                        <img src={bell} width="100%" alt="아이콘"/>
                     </div>
                     <div className="sidebar-text">Notification</div>
                 </div>
@@ -89,7 +96,7 @@ const Employee = () => {
                 >
                     <div className="sidebar-row drag-prevent cursor-pointer">
                         <div className="sidebar-icon">
-                            <img src="images/logout.png" width="100%" alt="아이콘"/>
+                            <img src={logoutImg} width="100%" alt="아이콘"/>
                         </div>
                         <div style={{paddingLeft: '5%', fontSize: '1.1rem'}}>LOGOUT</div>
                     </div>
