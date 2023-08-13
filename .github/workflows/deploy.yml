@@ -21,8 +21,9 @@ jobs:
 
       - name: yml 생성
         run: |
-          cd $GITHUB_WORKSPACE/src/main/resources # 프로젝트 루트로 이동 후 resources 폴더로 이동
-          touch application.yml # application.yml 생성
+          mkdir ./src/main/resources # resources 폴더 생성
+          cd ./src/main/resources # resources 폴더로 이동
+          touch ./application.yml # application.yml 생성
           echo "${{ secrets.APPLICATION }}" | base64 --decode > ./application.yml # secrets에 있는 APPLICATION 내용을 yml 파일에 덮어쓰기
         shell: bash
 
