@@ -19,12 +19,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: 저장소 Checkout
+        uses: actions/checkout@v3
+
       - name: yml 생성
         run: |
-          mkdir ./src/main/resources # resources 폴더 생성
-          cd ./src/main/resources # resources 폴더로 이동
-          touch ./application.yml # application.yml 생성
-          echo "${{ secrets.APPLICATION }}" | base64 --decode > ./application.yml # secrets에 있는 APPLICATION 내용을 yml 파일에 덮어쓰기
+          touch application.yml # application.yml 생성
+          echo "${{ secrets.APPLICATION }}" | base64 --decode > ./src/main/resources/application.yml # secrets에 있는 APPLICATION 내용 덮어쓰기
         shell: bash
 
       - name: yml 파일 다운받을 수 있게 업로드
