@@ -8,12 +8,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # github actions에서 사용할 JDK 설정 (프로젝트나 AWS의 java 버전과 달라도 무방)
-#      - name: Set up JDK 17
-#        uses: actions/setup-java@v2
-#        with:
-#          java-version: '17'
-
       # gradle caching - 빌드 시간 향상
       - name: Gradle Caching
         uses: actions/cache@v3
@@ -27,9 +21,9 @@ jobs:
 
       - name: yml 생성
         run: |
-          cd ./src/main/resources # resources 폴더로 이동
+          cd $GITHUB_WORKSPACE/src/main/resources # 프로젝트 루트로 이동 후 resources 폴더로 이동
           touch application.yml # application.yml 생성
-          echo "${{ secrets.APPLICATION }}" | base64 --decode > ./src/main/resources/application.yml # secrets에 있는 APPLICATION 내용을 yml 파일에 덮어쓰기
+          echo "${{ secrets.APPLICATION }}" | base64 --decode > ./application.yml # secrets에 있는 APPLICATION 내용을 yml 파일에 덮어쓰기
         shell: bash
 
       - name: yml 파일 다운받을 수 있게 업로드
