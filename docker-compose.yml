@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
       context: ./src/main/frontend
     restart: always
-    image: smartbaering-frontend
+    image: chy0503/smartbearing-front
     ports:
       - "3000:3000"
     stdin_open: true
@@ -16,10 +16,7 @@ services:
     working_dir: /app
   db:
     container_name: smartbearing-database
-    build:
-      dockerfile: Dockerfile
-      context: ./database
-    image: smartbaering-database
+    image: mysql:8.0
     platform: linux/arm64
     environment:
       - MYSQL_DATABASE=smartbearing
@@ -38,10 +35,7 @@ services:
     restart: always
   redis:
     container_name: smartbearing-redis
-    build:
-      dockerfile: Dockerfile
-      context: ./redis
-    image: smartbaering-redis
+    image: redis:alpine
     labels:
       - "name=redis"
       - "mode=standalone"
@@ -56,7 +50,8 @@ services:
     depends_on:
       - db
       - redis
-    image: smartbearing-backend
+      - frontend
+    image: chy0503/smartbearing-back
     environment:
       - DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
       - DB_USER=${DB_USER}
