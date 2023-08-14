@@ -3,11 +3,8 @@ services:
   frontend:
     container_name: smartbearing-frontend
     command: npm start # 컨테이너가 실행될 때 실행할 명령
-    build:
-      dockerfile: Dockerfile
-      context: ./src/main/frontend
     restart: always
-    image: chy0503/smartbearing-front
+    image: chy0503/smartbearing-frontend
     ports:
       - "3000:3000"
     stdin_open: true
@@ -41,17 +38,14 @@ services:
       - "mode=standalone"
     platform: linux/amd64
     ports:
-      - "6380:6379"
+      - "6379:6379"
   backend:
     container_name: smartbearing-backend
-    build:
-      dockerfile: Dockerfile
-      context: .
     depends_on:
       - db
       - redis
       - frontend
-    image: chy0503/smartbearing-back
+    image: chy0503/smartbearing-backend
     environment:
       - DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
       - DB_USER=${DB_USER}
