@@ -51,7 +51,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-
       - name: Docker Hub 퍼블리시
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/smartbearing-frontend:latest
@@ -68,4 +67,5 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/smartbearing-frontend
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/smartbearing-backend
             docker-compose up -d
+            docker-compose --env-file .env -f docker-compose.yml up
             docker image prune -f
