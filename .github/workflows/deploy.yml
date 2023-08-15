@@ -31,16 +31,7 @@ jobs:
           path: ./src/main/resources
 
       - name: .env 생성
-        run: |
-          touch .env
-          echo "${{ secrets.ENV }}" | base64 --decode > ./src/main/resources/.env
-        shell: bash
-
-      - name: env 파일 다운받을 수 있게 업로드
-        uses: actions/upload-artifact@v3.1.2
-        with:
-          name: .env
-          path: ./src/main/resources
+        run: echo "${{ secrets.ENV }}" | base64 --decode > .env
 
       # gradle build
       - name: Build with Gradle
@@ -75,5 +66,5 @@ jobs:
             sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/smartbearing-frontend
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/smartbearing-backend
-            docker-compose --env-file ../../src/main/resources/.env -f docker-compose.yml up
+            docker-compose up -d
             docker image prune -f
