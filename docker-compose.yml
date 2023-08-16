@@ -8,13 +8,10 @@ services:
     ports:
       - "3000:3000"
     stdin_open: true
-    volumes:
-      - ./src/main/frontend:/app
     working_dir: /app
   db:
     container_name: smartbearing-database
     image: mysql:8.0
-    platform: linux/arm64
     environment:
       - MYSQL_DATABASE=smartbearing
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
@@ -36,7 +33,6 @@ services:
     labels:
       - "name=redis"
       - "mode=standalone"
-    platform: linux/amd64
     ports:
       - "6379:6379"
   backend:
@@ -47,9 +43,9 @@ services:
       - frontend
     image: chy0503/smartbearing-backend
     environment:
-      - DB_ROOT_PASSWORD=${{ secrets.DB_ROOT_PASSWORD }}
-      - DB_USER=${{ secrets.DB_USER }}
-      - DB_USER_PASSWORD=${{ secrets.DB_USER_PASSWORD }}
+      - DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - DB_USER=${DB_USER}
+      - DB_USER_PASSWORD=${DB_USER_PASSWORD}
     ports:
       - "80:8080"
     restart: always
