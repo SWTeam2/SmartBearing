@@ -66,6 +66,6 @@ jobs:
             sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/smartbearing-frontend
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/smartbearing-backend
-            echo "${{ secrets.DOCKER_COMPOSE_YML }}" > docker-compose.yml
+            echo "${{ secrets.DOCKER_COMPOSE_YML }}" | base64 --decode > docker-compose.yml
             docker-compose -f docker-compose.yml up -d
             docker image prune -f
