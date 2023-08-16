@@ -6,7 +6,6 @@ import folders from "../images/folders.png";
 import user from "../images/user.png";
 import chart from "../images/chart.png";
 import people from "../images/people.png";
-import bell from "../images/bell.png";
 import logoutImg from "../images/logout.png";
 
 const Notification = () => {
@@ -81,8 +80,31 @@ const Notification = () => {
             </div>
 
             {/* main */}
-            <div style={{width: '82vw', height: '100vh'}}>
-                <div className="layout-title" style={{margin: '3% 4%'}}>Notification</div>
+            <div style={{width: '82vw', height: '100vh', overflow: 'auto'}}>
+                <div className="row" style={{margin: '3% 4%'}}>
+                    <div className="layout-title">Notification</div>
+                </div>
+                <div className="main-noti drag-prevent">
+                    <div style={{fontWeight:'bold', color: '#8A96A8'}} >2023.08.16 12:00:00</div>
+                    <div className="main-noti-content">
+                        <div style={{width: '13%', fontWeight:'bold'}}>Bearing1_1</div>
+                        <div style={{width: '87%', wordWrap: 'break-word'}}>Notification Message</div>
+                    </div>
+                </div>
+                <div className="main-noti drag-prevent">
+                    <div style={{fontWeight:'bold', color: '#8A96A8'}} >2023.08.16 12:00:00</div>
+                    <div className="main-noti-content">
+                        <div style={{width: '13%', fontWeight:'bold'}}>Bearing1_1</div>
+                        <div style={{width: '87%', wordWrap: 'break-word'}}>Notification Message</div>
+                    </div>
+                </div>
+                <div className="main-noti drag-prevent">
+                    <div style={{fontWeight:'bold', color: '#8A96A8'}} >2023.08.16 12:00:00</div>
+                    <div className="main-noti-content">
+                        <div style={{width: '13%', fontWeight:'bold'}}>Bearing1_1</div>
+                        <div style={{width: '87%', wordWrap: 'break-word'}}>Notification Message</div>
+                    </div>
+                </div>
             </div>
         </div>
     );
