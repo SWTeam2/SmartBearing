@@ -34,8 +34,11 @@ public class MemberService {
         if (!passwordEncoder.matches(requestLogin.getPassword(), member.getPassword()))
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
 
+        // position 가져오기 위한 employee
+        Employee employee = employeeRepository.findByEmployeeId(member.getEmployeeId());
+
         // 토큰 생성
-        String token = jwtTokenProvider.createToken(member.getMemberId());
+        String token = jwtTokenProvider.createToken(member.getMemberId(), employee.getPosition());
 
         // 레디스에 토큰 저장
         redisTemplate.opsForValue().set("JWT_TOKEN:" + requestLogin.getMemberId(), token);
