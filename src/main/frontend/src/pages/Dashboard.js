@@ -134,7 +134,7 @@ const Dashboard = () => {
                         <div>
                             <div style={{fontWeight: 'bold', color: '#8A96A8'}}>Lisk Level</div>
                             <div className="dashboard-content">
-                                <div style={{fontWeight: 'bold'}}>High</div>
+                                <div style={{fontWeight: 'bold', color: '#DA1E28'}}>High</div>
                             </div>
                         </div>
                     </div>
@@ -268,6 +268,8 @@ const Dashboard = () => {
                     <div className="dashboard drag-prevent" style={{width: '37%', height: '250px', overflow: 'auto'}}>
                     </div>
                 </div>
+
+                <div style={{height: '30px', width: '100%'}}></div>
             </div>
         </div>
     );
