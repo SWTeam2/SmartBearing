@@ -6,9 +6,8 @@ import EmployeeCreate from "./pages/EmployeeCreate.js";
 import EmployeeUpdate from "./pages/EmployeeUpdate.js";
 import EmployeeDelete from "./pages/EmployeeDelete.js";
 import Notification from "./pages/Notification.js";
-import {Routes, Route, BrowserRouter} from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import AuthGuard from "./pages/AuthGuard.js";
-
 
 function App() {
     return (
