@@ -6,10 +6,14 @@ import folders from "../images/folders.png";
 import user from "../images/user.png";
 import chart from "../images/chart.png";
 import people from "../images/people.png";
+import {useNavigate} from 'react-router-dom';
+import {logout} from "./useLogout.js";
 
 const Notification = () => {
-    const logout = () => {
+    const handleNavigate = useNavigate();
+    const handleLogout = () => {
         // 로그아웃 기능을 여기에 추가합니다.
+        logout(handleNavigate);
     };
 
     return (

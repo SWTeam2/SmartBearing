@@ -9,29 +9,15 @@ import bell from "../images/bell.png";
 import etc from "../images/etc.png";
 import message from "../images/message.png";
 import {useNavigate} from 'react-router-dom';
+import {logout} from "./useLogout.js";
+import usePosition from "./usePosition.js";
 
 const Dashboard = () => {
     const handleNavigate = useNavigate();
 
-    const logout = async () => {
+    const handleLogout = () => {
         // 로그아웃 기능을 여기에 추가합니다.
-        try {
-            const response = await fetch('/api/members/logout', {
-                method: 'POST',
-                headers: {
-                    'X-AUTH-TOKEN': localStorage.getItem('token')
-                }
-            });
-
-            if (response.ok) {
-                localStorage.removeItem('token');
-                handleNavigate('/');
-            } else {
-                console.log('로그아웃 실패');
-            }
-        } catch (error) {
-            console.error('로그인 에러', error);
-        }
+        logout(handleNavigate);
     };
 
     return (
@@ -89,6 +75,7 @@ const Dashboard = () => {
                 <div
                     style={{position: 'fixed', bottom: '0', left: '0', width: '18vw'}}
                     className="cursor-pointer drag-prevent"
+                    onClick={handleLogout}
                 >
                     <div style={{padding: '20px'}}>
                         <button className="logout-btn bg-charcoal" type="button" style={{width: '100%'}}

@@ -7,10 +7,14 @@ import folders from "../images/folders.png";
 import user from "../images/user.png";
 import chart from "../images/chart.png";
 import bell from "../images/bell.png";
+import {useNavigate} from 'react-router-dom';
+import {logout} from "./useLogout.js";
 
 const Employee = () => {
-    const logout = () => {
+    const handleNavigate = useNavigate();
+    const handleLogout = () => {
         // 로그아웃 기능을 여기에 추가합니다.
+        logout(handleNavigate);
     };
 
     const [employeeData, setEmployeeData] = useState([]);
@@ -91,6 +95,7 @@ const Employee = () => {
                 <div
                     style={{position: 'fixed', bottom: '0', left: '0', width: '18vw'}}
                     className="cursor-pointer drag-prevent"
+                    onClick={handleLogout}
                 >
                     <div style={{padding: '20px'}}>
                         <button className="logout-btn bg-charcoal" type="button" style={{width: '100%'}} onClick={logout}>
