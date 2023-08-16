@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import '../App.css';
 import logo_X from "../images/logo_X.png";
 import label from "../images/label.png";
@@ -8,10 +8,30 @@ import people from "../images/people.png";
 import bell from "../images/bell.png";
 import etc from "../images/etc.png";
 import message from "../images/message.png";
+import {useNavigate} from 'react-router-dom';
 
 const Dashboard = () => {
-    const logout = () => {
+    const handleNavigate = useNavigate();
+
+    const logout = async () => {
         // 로그아웃 기능을 여기에 추가합니다.
+        try {
+            const response = await fetch('/api/members/logout', {
+                method: 'POST',
+                headers: {
+                    'X-AUTH-TOKEN': localStorage.getItem('token')
+                }
+            });
+
+            if (response.ok) {
+                localStorage.removeItem('token');
+                handleNavigate('/');
+            } else {
+                console.log('로그아웃 실패');
+            }
+        } catch (error) {
+            console.error('로그인 에러', error);
+        }
     };
 
     return (
