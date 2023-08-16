@@ -130,7 +130,7 @@ const Dashboard = () => {
                     </div>
 
                     <div className="dashboard drag-prevent"
-                         style={{display: 'flex', width: '25%', marginLeft: '2%', marginRight: '2%'}}>
+                         style={{display: 'flex', width: '26%', marginLeft: '1%', marginRight: '1%'}}>
                         <div>
                             <div style={{fontWeight: 'bold', color: '#8A96A8'}}>Lisk Level</div>
                             <div className="dashboard-content">
@@ -139,7 +139,7 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    <div className="dashboard drag-prevent" style={{display: 'flex', width: '25%'}}>
+                    <div className="dashboard drag-prevent" style={{display: 'flex', width: '26%'}}>
                         <div>
                             <div style={{fontWeight: 'bold', color: '#8A96A8'}}>Prediction</div>
                             <div className="dashboard-content">
@@ -150,11 +150,11 @@ const Dashboard = () => {
                 </div>
 
                 <div style={{display: 'flex', justifyContent: 'space-between', marginLeft: '3%', marginRight: '3%'}}>
-                    <div className="dashboard drag-prevent" style={{width: '20%', height: '250px', overflow: 'auto', marginRight: '2%'}}>
+                    <div className="dashboard drag-prevent" style={{width: '20%', height: '250px', overflow: 'auto', marginRight: '1%'}}>
                         <div style={{fontWeight: 'bold', fontSize: '18px', marginBottom: '20px'}}>Log - Prediction</div>
                         <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
                             <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>Timestamp</div>
-                            <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>RUL</div>
+                            <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>P</div>
                         </div>
                         <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
                             <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 1</div>
@@ -198,12 +198,12 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    <div className="dashboard drag-prevent" style={{width: '78%', height: '250px', overflow: 'auto'}}>
+                    <div className="dashboard drag-prevent" style={{width: '79%', height: '250px', overflow: 'auto'}}>
                     </div>
                 </div>
 
                 <div style={{display: 'flex', justifyContent: 'space-between', marginLeft: '3%', marginRight: '3%'}}>
-                    <div className="dashboard drag-prevent" style={{width: '20%', height: '250px', overflow: 'auto', marginRight: '2%'}}>
+                    <div className="dashboard drag-prevent" style={{width: '20%', height: '250px', overflow: 'auto', marginRight: '1%'}}>
                         <div style={{fontWeight: 'bold', fontSize: '18px', marginBottom: '20px'}}>Log - Amplitude</div>
                         <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
                             <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>Timestamp</div>
@@ -262,10 +262,10 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    <div className="dashboard drag-prevent" style={{width: '36%', height: '250px', overflow: 'auto', marginRight: '2%'}}>
+                    <div className="dashboard drag-prevent" style={{width: '37%', height: '250px', overflow: 'auto', marginRight: '1%'}}>
                     </div>
 
-                    <div className="dashboard drag-prevent" style={{width: '36%', height: '250px', overflow: 'auto'}}>
+                    <div className="dashboard drag-prevent" style={{width: '37%', height: '250px', overflow: 'auto'}}>
                     </div>
                 </div>
             </div>
