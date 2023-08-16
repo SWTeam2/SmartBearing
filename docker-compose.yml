@@ -47,9 +47,9 @@ services:
       - frontend
     image: chy0503/smartbearing-backend
     environment:
-      - DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
-      - DB_USER=${DB_USER}
-      - DB_USER_PASSWORD=${DB_USER_PASSWORD}
+      - DB_ROOT_PASSWORD=${{ secrets.DB_ROOT_PASSWORD }}
+      - DB_USER=${{ secrets.DB_USER }}
+      - DB_USER_PASSWORD=${{ secrets.DB_USER_PASSWORD }}
     ports:
       - "80:8080"
     restart: always
