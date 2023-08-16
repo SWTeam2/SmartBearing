@@ -163,8 +163,23 @@
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
 }
 
+.dashboard {
+  border: 1px solid #DDE1E6;
+  margin-top: 14px;
+  padding: 15px 15px;
+  font-size: 13px;
+  background: white;
+  align-items: center;
+}
+
 .main-noti-content {
   margin: 10px 0px 0px 0px;
+  display: flex;
+  font-size: 18px;
+}
+
+.dashboard-content {
+  margin: 7px 0px 0px 0px;
   display: flex;
   font-size: 18px;
 }

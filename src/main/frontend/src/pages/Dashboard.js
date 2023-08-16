@@ -7,6 +7,7 @@ import user from "../images/user.png";
 import people from "../images/people.png";
 import bell from "../images/bell.png";
 import etc from "../images/etc.png";
+import message from "../images/message.png";
 
 const Dashboard = () => {
     const logout = () => {
@@ -70,7 +71,8 @@ const Dashboard = () => {
                     className="cursor-pointer drag-prevent"
                 >
                     <div style={{padding: '20px'}}>
-                        <button className="logout-btn bg-charcoal" type="button" style={{width: '100%'}} onClick={logout}>
+                        <button className="logout-btn bg-charcoal" type="button" style={{width: '100%'}}
+                                onClick={logout}>
                             <div style={{paddingLeft: '5%', fontSize: '1.1rem'}}>LOGOUT</div>
                         </button>
                     </div>
@@ -82,10 +84,10 @@ const Dashboard = () => {
                 <div className="row" style={{margin: '3% 4%'}}>
                     <div className="layout-title">Dashboard</div>
                 </div>
+
                 <div className="cursor-pointer"
                      style={{
-                         marginLeft: '4%',
-                         marginRight: '4%',
+                         margin: '14px 3% 0% 3%',
                          display: 'flex',
                          borderBottom: '1.5px solid #DDE1E6'
                      }}>
@@ -108,10 +110,167 @@ const Dashboard = () => {
                         <img src={etc} width="100%" alt="아이콘"/>
                     </div>
                 </div>
+
+                <div style={{display: 'flex', justifyContent: 'space-between', marginLeft: '3%', marginRight: '3%'}}>
+                    <div className="dashboard drag-prevent" style={{
+                        display: 'flex',
+                        width: '46%',
+                        justifyContent: 'space-between',
+                        alignContent: 'center'
+                    }}>
+                        <div>
+                            <div style={{fontWeight: 'bold', color: '#8A96A8'}}>Contact</div>
+                            <div className="dashboard-content">
+                                <div style={{fontWeight: 'bold'}}>데이터1팀 : 홍길동 (hgd@gmail.com)</div>
+                            </div>
+                        </div>
+                        <div style={{marginRight: '10px', width: '20px', height: '50px', lineHeight: '65px'}}>
+                            <img src={message} width="100%" alt="아이콘"/>
+                        </div>
+                    </div>
+
+                    <div className="dashboard drag-prevent"
+                         style={{display: 'flex', width: '25%', marginLeft: '2%', marginRight: '2%'}}>
+                        <div>
+                            <div style={{fontWeight: 'bold', color: '#8A96A8'}}>Lisk Level</div>
+                            <div className="dashboard-content">
+                                <div style={{fontWeight: 'bold'}}>High</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="dashboard drag-prevent" style={{display: 'flex', width: '25%'}}>
+                        <div>
+                            <div style={{fontWeight: 'bold', color: '#8A96A8'}}>Prediction</div>
+                            <div className="dashboard-content">
+                                <div style={{fontWeight: 'bold'}}>0000000</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style={{display: 'flex', justifyContent: 'space-between', marginLeft: '3%', marginRight: '3%'}}>
+                    <div className="dashboard drag-prevent" style={{width: '20%', height: '250px', overflow: 'auto', marginRight: '2%'}}>
+                        <div style={{fontWeight: 'bold', fontSize: '18px', marginBottom: '20px'}}>Log - Prediction</div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>Timestamp</div>
+                            <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>RUL</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 1</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 2</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 3</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 4</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 5</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 6</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 7</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 8</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 9</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 10</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                    </div>
+
+                    <div className="dashboard drag-prevent" style={{width: '78%', height: '250px', overflow: 'auto'}}>
+                    </div>
+                </div>
+
+                <div style={{display: 'flex', justifyContent: 'space-between', marginLeft: '3%', marginRight: '3%'}}>
+                    <div className="dashboard drag-prevent" style={{width: '20%', height: '250px', overflow: 'auto', marginRight: '2%'}}>
+                        <div style={{fontWeight: 'bold', fontSize: '18px', marginBottom: '20px'}}>Log - Amplitude</div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>Timestamp</div>
+                            <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>V</div>
+                            <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>H</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 1</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 2</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 3</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 4</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 5</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 6</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 7</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 8</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 9</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 10</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
+                        </div>
+                    </div>
+
+                    <div className="dashboard drag-prevent" style={{width: '36%', height: '250px', overflow: 'auto', marginRight: '2%'}}>
+                    </div>
+
+                    <div className="dashboard drag-prevent" style={{width: '36%', height: '250px', overflow: 'auto'}}>
+                    </div>
+                </div>
             </div>
         </div>
-    )
-        ;
+    );
 };
 
 export default Dashboard;
