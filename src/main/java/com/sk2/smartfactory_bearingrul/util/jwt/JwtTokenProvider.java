@@ -61,7 +61,12 @@ public class JwtTokenProvider {
 
     // 토큰에서 Member 정보 추출
     public String getMemberId(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
+        try {
+            Claims claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+            return claims.get("memberId", String.class);
+        } catch (JwtException e) {
+            throw new IllegalArgumentException("토큰으로부터 멤버를 찾을 수 없습니다.");
+        }
     }
 
     // 토큰 유효성, 만료일자 확인
