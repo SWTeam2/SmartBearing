@@ -7,6 +7,7 @@ import EmployeeUpdate from "./pages/EmployeeUpdate.js";
 import EmployeeDelete from "./pages/EmployeeDelete.js";
 import Notification from "./pages/Notification.js";
 import {Routes, Route, BrowserRouter} from "react-router-dom";
+import AuthGuard from "./pages/AuthGuard.js";
 
 
 function App() {
@@ -15,16 +16,27 @@ function App() {
             <Routes>
                 <Route path="/" element={<Login/>}/>
                 <Route path="/signup" element={<Signup/>}/>
-                <Route path="/dashboard" element={<Dashboard/>}/>
-                <Route path="/employee" element={<Employee/>}/>
-                <Route path="/employee/create" element={<EmployeeCreate/>}/>
-                <Route path="/employee/update" element={<EmployeeUpdate/>}/>
-                <Route path="/employee/delete" element={<EmployeeDelete/>}/>
-                <Route path="/notification" element={<Notification/>}/>
+                <Route element={<AuthGuard />}>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                </Route>
+                <Route element={<AuthGuard />}>
+                    <Route path="/employee" element={<Employee />} />
+                </Route>
+                <Route element={<AuthGuard />}>
+                    <Route path="/employee/create" element={<EmployeeCreate />} />
+                </Route>
+                <Route element={<AuthGuard />}>
+                    <Route path="/employee/update" element={<EmployeeUpdate />} />
+                </Route>
+                <Route element={<AuthGuard />}>
+                    <Route path="/employee/delete" element={<EmployeeDelete />} />
+                </Route>
+                <Route element={<AuthGuard />}>
+                    <Route path="/notification" element={<Notification />} />
+                </Route>
             </Routes>
         </BrowserRouter>
     );
 }
 
 export default App;
-
