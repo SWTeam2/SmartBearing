@@ -46,6 +46,14 @@
   border: none;
 }
 
+.logout-btn {
+  display: block;
+  color: white;
+  font-size: 15px;
+  padding: 13px;
+  border: none;
+}
+
 .center-box-title {
   font-size: 40px;
   font-weight: bold;
@@ -155,8 +163,23 @@
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
 }
 
+.dashboard {
+  border: 1px solid #DDE1E6;
+  margin-top: 14px;
+  padding: 15px 15px;
+  font-size: 13px;
+  background: white;
+  align-items: center;
+}
+
 .main-noti-content {
   margin: 10px 0px 0px 0px;
+  display: flex;
+  font-size: 18px;
+}
+
+.dashboard-content {
+  margin: 7px 0px 0px 0px;
   display: flex;
   font-size: 18px;
 }
@@ -182,5 +205,18 @@
 }
 
 .employee-btn:hover {
+  color: black;
+}
+
+.bearing-btn {
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #535F71;
+  background: none;
+  border: none;
+  padding: 15px;
+}
+
+.bearing-btn:hover {
   color: black;
 }
