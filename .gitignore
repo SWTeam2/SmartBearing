@@ -38,6 +38,5 @@ out/
 
 ###
 application.yml
-
-###
 .env
+*.pem
