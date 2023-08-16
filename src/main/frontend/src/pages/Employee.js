@@ -7,7 +7,6 @@ import folders from "../images/folders.png";
 import user from "../images/user.png";
 import chart from "../images/chart.png";
 import bell from "../images/bell.png";
-import logoutImg from "../images/logout.png";
 
 const Employee = () => {
     const logout = () => {
@@ -90,15 +89,13 @@ const Employee = () => {
                 </div>
 
                 <div
-                    style={{position: 'fixed', bottom: '2vh', left: '3.8vw', width: '18vw'}}
-                    onClick={logout}
-                    className="cursor-pointer"
+                    style={{position: 'fixed', bottom: '0', left: '0', width: '18vw'}}
+                    className="cursor-pointer drag-prevent"
                 >
-                    <div className="sidebar-row drag-prevent cursor-pointer">
-                        <div className="sidebar-icon">
-                            <img src={logoutImg} width="100%" alt="아이콘"/>
-                        </div>
-                        <div style={{paddingLeft: '5%', fontSize: '1.1rem'}}>LOGOUT</div>
+                    <div style={{padding: '20px'}}>
+                        <button className="logout-btn bg-charcoal" type="button" style={{width: '100%'}} onClick={logout}>
+                            <div style={{paddingLeft: '5%', fontSize: '1.1rem'}}>LOGOUT</div>
+                        </button>
                     </div>
                 </div>
             </div>
