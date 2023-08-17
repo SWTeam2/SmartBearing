@@ -7,17 +7,22 @@ import folders from "../images/folders.png";
 import user from "../images/user.png";
 import chart from "../images/chart.png";
 import bell from "../images/bell.png";
-import {useNavigate} from 'react-router-dom';
+import {Navigate, useNavigate} from 'react-router-dom';
 import {logout} from "./useLogout.js";
+import usePosition from "./usePosition.js";
 
 const Employee = () => {
     const handleNavigate = useNavigate();
-    const handleLogout = () => {
-        // 로그아웃 기능을 여기에 추가합니다.
-        logout(handleNavigate);
-    };
+    const userPosition = usePosition();
 
     const [employeeData, setEmployeeData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        if (userPosition !== null) {
+            setIsLoading(false);
+        }
+    }, [userPosition]);
 
     const getEmployees = async () => {
         try {
@@ -39,6 +44,20 @@ const Employee = () => {
     useEffect(() => {
         getEmployees();
     }, []);
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (userPosition !== "관리자") {
+        alert('관리자만 접근할 수 있는 페이지입니다.');
+        return <Navigate to={"/dashboard"} replace />;
+    }
+
+    const handleLogout = () => {
+        // 로그아웃 기능을 여기에 추가합니다.
+        logout(handleNavigate);
+    };
 
     return (
         <div style={{display: 'flex', backgroundColor: '#F2F4F8', height: '100vh'}}>
