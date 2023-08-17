@@ -21,23 +21,22 @@ public class SensorBearingRepository {
     private final RedisTemplate<String, Object> redisTemplate;
     private final ObjectMapper objectMapper;
 
-    private String serializeSensor(SensorBearingDto sensor) throws JsonProcessingException {
+    private String serialize(SensorBearingDto sensor) throws JsonProcessingException {
         return objectMapper.writeValueAsString(sensor);
     }
 
-    private SensorBearingDto deserializeSensor(String value) throws JsonProcessingException {
+    private SensorBearingDto deserialize(String value) throws JsonProcessingException {
         if (value == null) return null;
         return objectMapper.readValue(value, SensorBearingDto.class);
     }
 
-    private String generateSensorKey(String table, Long id) {
+    private String generateKey(String table, Long id) {
         return "SensorBearing:" + table + ":" + id;
     }
 
-    public void saveSensor(String table, SensorBearingDto dto) {
-        String key = generateSensorKey(table, dto.getId());
+    public void save(String table, SensorBearingDto dto) {
         try {
-            redisTemplate.opsForValue().set(key, serializeSensor(dto));
+            redisTemplate.opsForValue().set(generateKey(table, dto.getId()), serialize(dto));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -45,7 +44,7 @@ public class SensorBearingRepository {
 
     public SensorBearingDto findSensorById(String table, Long id) {
         try {
-            return deserializeSensor((String) redisTemplate.opsForValue().get(generateSensorKey(table, id)));
+            return deserialize((String) redisTemplate.opsForValue().get(generateKey(table, id)));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -66,15 +65,14 @@ public class SensorBearingRepository {
                     })
                     .map(key -> {
                         try {
-                            return deserializeSensor((String) redisTemplate.opsForValue().get(key));
+                            return deserialize((String) redisTemplate.opsForValue().get(key));
                         } catch (JsonProcessingException e) {
                             throw new RuntimeException(e);
                         }
                     })
                     .collect(Collectors.toList());
-
-        } else {
-            return new ArrayList<>();
         }
+
+        return new ArrayList<>();
     }
 }
