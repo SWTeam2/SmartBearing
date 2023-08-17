@@ -1,6 +1,7 @@
 package com.sk2.smartfactory_bearingrul.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.sk2.smartfactory_bearingrul.dto.PredictionBearingDto;
 import com.sk2.smartfactory_bearingrul.dto.SensorBearingDto;
 import com.sk2.smartfactory_bearingrul.service.BearingService;
 import io.swagger.annotations.ApiOperation;
@@ -33,7 +34,22 @@ public class BearingController {
 
         if (response.getStatusCode() == HttpStatus.OK) {
             bearingService.saveSensor(table, response.getBody()); // redis 저장
-            return ResponseEntity.ok().body(bearingService.parsingSensor(response.getBody())); // API reponse 값을 List 형태로 변경하여 return
+            return ResponseEntity.ok().body(bearingService.parsingSensor(response.getBody())); // API response 값을 List 형태로 변경하여 return
+        } else {
+            return ResponseEntity.status(response.getStatusCode()).build();
+        }
+    }
+
+    @ApiOperation(value = "예측 데이터 조회", notes = "table과 id를 입력 받아 해당 table에서 입력 받은 id 이후의 prediction data를 불러옵니다.")
+    @GetMapping("/prediction/{table}/{id}")
+    public ResponseEntity<List<PredictionBearingDto>> getPredictionData(@PathVariable String table, @PathVariable String id) throws JsonProcessingException, JSONException {
+        // API 호출
+        String apiUrl = "https://win1.i4624.tk/output/prediction_table_" + table.toLowerCase().replace(" ", "") + "/" + id;
+        ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            bearingService.savePrediction(table, response.getBody()); // redis 저장
+            return ResponseEntity.ok().body(bearingService.parsingPrediction(response.getBody())); // API response 값을 List 형태로 변경하여 return
         } else {
             return ResponseEntity.status(response.getStatusCode()).build();
         }
