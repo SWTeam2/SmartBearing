@@ -30,11 +30,11 @@ public class BearingService {
 
     public void saveSensor(String table, String data) throws JsonProcessingException {
         List<SensorBearingDto> sensorDataList = parsingSensor(data); // 리스트로 변환
-        sensorDataList.forEach(sensorData -> sensorBearingRepository.save(table, sensorData)); // 각 dto를 reids에 저장
+        sensorDataList.forEach(sensorData -> sensorBearingRepository.save(table, sensorData)); // 각 dto를 redis에 저장
     }
 
     public void savePrediction(String table, String data) throws JsonProcessingException {
         List<PredictionBearingDto> predictionDataList = parsingPrediction(data); // 리스트로 변환
-        predictionDataList.forEach(predictionData -> predictionBearingRepository.save(table, predictionData)); // 각 dto를 reids에 저장
+        predictionDataList.forEach(predictionData -> predictionBearingRepository.save(table, predictionData)); // 각 dto를 redis에 저장
     }
 }
