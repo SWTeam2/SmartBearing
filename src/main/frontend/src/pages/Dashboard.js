@@ -38,14 +38,16 @@ const Dashboard = () => {
     const [logPredictionData, setLogPredictionData] = useState([]);
     const reversedLogSensorData = [...logSensorData].reverse();
     const reversedLogPredictionData = [...logPredictionData].reverse();
+    let maxSensorId = 0;
+    let maxPredictionId = 0;
 
     const logout = () => {
         // 로그아웃 기능을 여기에 추가합니다.
     };
 
-    const getInitialSensor = async () => {
+    const getSensor = async () => {
         try {
-            const response = await fetch(`/api/bearing/sensor/${selectedBearing}/1`, {
+            const response = await fetch(`/api/bearing/sensor/${selectedBearing}/${maxSensorId + 1}`, {
                 method: 'GET'
             });
 
@@ -53,12 +55,14 @@ const Dashboard = () => {
                 const responseData = await response.json();
 
                 const newLogSensorData = responseData.map(responseData => ({
+                    id: responseData.id,
                     timestamp: `${responseData.hour}:${responseData.minutes}:${responseData.second}:${responseData.microsecond}`,
                     vert_accel: responseData.vert_accel,
                     horiz_accel: responseData.horiz_accel
                 }));
 
-                setLogSensorData(newLogSensorData);
+                maxSensorId = Math.max(...newLogSensorData.map(data => data.id));
+                setLogSensorData(prevData => [...prevData, ...newLogSensorData]);
             } else {
                 console.log('데이터 불러오기 실패');
             }
@@ -67,9 +71,9 @@ const Dashboard = () => {
         }
     };
 
-    const getInitialPrediction = async () => {
+    const getPrediction = async () => {
         try {
-            // const response = await fetch(`/api/bearing/prediction/${selectedBearing}/1`, {
+            // const response = await fetch(`/api/bearing/prediction/${selectedBearing}/${maxPredictionId + 1}`, {
             //     method: 'GET'
             // });
             const response = await fetch(`/api/bearing/prediction/ex/1`, {
@@ -80,11 +84,13 @@ const Dashboard = () => {
                 const responseData = await response.json();
 
                 const newLogPredictionData = responseData.map(responseData => ({
+                    id: responseData.pred_id,
                     timestamp: responseData.timestamp,
                     prediction: responseData.prediction
                 }));
 
-                setLogPredictionData(newLogPredictionData);
+                maxPredictionId = Math.max(...newLogPredictionData.map(data => data.id));
+                setLogPredictionData(prevData => [...prevData, ...newLogPredictionData]);
             } else {
                 console.log('데이터 불러오기 실패');
             }
@@ -95,8 +101,21 @@ const Dashboard = () => {
 
     useEffect(() => {
         // selectedBearing 값이 변경될 때 호출되는 부분
-        getInitialSensor();
-        getInitialPrediction();
+        setLogSensorData([]); // 초기화
+        setLogPredictionData([]); // 초기화
+        getSensor();
+        getPrediction();
+
+        // 10초마다 API 요청을 보내고 데이터 업데이트
+        const interval = setInterval(() => {
+            getSensor();
+            getPrediction();
+        }, 10000); // 10초마다 실행
+
+        // 컴포넌트가 unmount될 때 interval 정리
+        return () => {
+            clearInterval(interval);
+        };
     }, [selectedBearing]);
 
     return (
@@ -185,7 +204,8 @@ const Dashboard = () => {
                             type="button"
                             onClick={() => {
                                 setSelectedBearing(bearingItem);
-                                getInitialSensor(bearingItem);
+                                getSensor(bearingItem);
+                                getPrediction(bearingItem);
                             }}
                         >
                             {bearingItem}
@@ -194,20 +214,12 @@ const Dashboard = () => {
                 </div>
 
                 <div style={{display: 'flex', justifyContent: 'space-between', marginLeft: '3%', marginRight: '3%'}}>
-                    <div className="dashboard drag-prevent" style={{
-                        display: 'flex',
-                        width: '46%',
-                        justifyContent: 'space-between',
-                        alignContent: 'center'
-                    }}>
+                    <div className="dashboard drag-prevent" style={{display: 'flex', width: '46%'}}>
                         <div>
                             <div style={{fontWeight: 'bold', color: '#8A96A8'}}>Contact</div>
                             <div className="dashboard-content">
                                 <div style={{fontWeight: 'bold'}}>데이터1팀 : 홍길동 (hgd@gmail.com)</div>
                             </div>
-                        </div>
-                        <div style={{marginRight: '10px', width: '20px', height: '50px', lineHeight: '65px'}}>
-                            <img src={message} width="100%" alt="아이콘"/>
                         </div>
                     </div>
 
