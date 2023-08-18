@@ -12,7 +12,6 @@ import {logout} from "./useLogout.js";
 const Notification = () => {
     const handleNavigate = useNavigate();
     const handleLogout = () => {
-        // 로그아웃 기능을 여기에 추가합니다.
         logout(handleNavigate);
     };
 
@@ -73,7 +72,7 @@ const Notification = () => {
                     className="cursor-pointer drag-prevent"
                 >
                     <div style={{padding: '20px'}}>
-                        <button className="logout-btn bg-charcoal" type="button" style={{width: '100%'}} onClick={logout}>
+                        <button className="logout-btn bg-charcoal" type="button" style={{width: '100%'}} onClick={handleLogout}>
                             <div style={{paddingLeft: '5%', fontSize: '1.1rem'}}>LOGOUT</div>
                         </button>
                     </div>

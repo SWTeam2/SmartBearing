@@ -31,7 +31,6 @@ const Dashboard = () => {
     }, [memberId]);
 
     const handleLogout = () => {
-        // 로그아웃 기능을 여기에 추가합니다.
         logout(handleNavigate);
     };
 
