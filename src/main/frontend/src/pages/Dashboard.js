@@ -6,7 +6,6 @@ import folders from "../images/folders.png";
 import user from "../images/user.png";
 import people from "../images/people.png";
 import bell from "../images/bell.png";
-import message from "../images/message.png";
 import {useNavigate} from 'react-router-dom';
 import {logout} from "./useLogout.js";
 import useMemberId from "./useMemberId.js";
@@ -31,6 +30,7 @@ const Dashboard = () => {
 
     const handleLogout = () => {
         logout(handleNavigate);
+    }
     const bearing = ['Bearing 1_1', 'Bearing 1_2', 'Bearing 1_3', 'Bearing 1_4', 'Bearing 1_5', 'Bearing 2_1', 'Bearing 2_2', 'Bearing 2_3', 'Bearing 2_4', 'Bearing 2_5', 'Bearing 3_1'];
 
     const [selectedBearing, setSelectedBearing] = useState(bearing[0]);
@@ -40,10 +40,6 @@ const Dashboard = () => {
     const reversedLogPredictionData = [...logPredictionData].reverse();
     let maxSensorId = 0;
     let maxPredictionId = 0;
-
-    const logout = () => {
-        // 로그아웃 기능을 여기에 추가합니다.
-    };
 
     const getSensor = async () => {
         try {
