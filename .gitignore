@@ -40,3 +40,4 @@ out/
 application.yml
 .env
 *.pem
+.DS_STORE
