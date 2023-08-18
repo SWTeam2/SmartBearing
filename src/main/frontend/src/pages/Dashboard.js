@@ -25,7 +25,7 @@ const Dashboard = () => {
                     setEmployeeInfo(data);
                 })
                 .catch(error => {
-                    console.error('Error fetching employee info', error)
+                    console.error('사원 정보 불러오기 에러 - ', error)
                 })
         }
     }, [memberId]);
@@ -46,19 +46,19 @@ const Dashboard = () => {
                     <div className="sidebar-icon">
                         <img src={label} width="100%" alt="아이콘"/>
                     </div>
-                    <div className="sidebar-text">사원코드: {employeeInfo?.employeeId}</div>
+                    <div className="sidebar-text">{employeeInfo?.employeeId}</div>
                 </div>
                 <div className="sidebar-row drag-prevent">
                     <div className="sidebar-icon">
                         <img src={folders} width="100%" alt="아이콘"/>
                     </div>
-                    <div className="sidebar-text">부서: {employeeInfo?.department}</div>
+                    <div className="sidebar-text">{employeeInfo?.department}</div>
                 </div>
                 <div className="sidebar-row drag-prevent">
                     <div className="sidebar-icon">
                         <img src={user} width="100%" alt="아이콘"/>
                     </div>
-                    <div className="sidebar-text">이름: {employeeInfo?.name}</div>
+                    <div className="sidebar-text">{employeeInfo?.name}</div>
                 </div>
 
                 <div style={{height: '1px', margin: '10% 10%', background: 'black'}}></div>
