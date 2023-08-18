@@ -22,8 +22,13 @@ const Employee = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if(memberId) {
-            fetch(`/api/employees/${memberId}`)
+        if (memberId) {
+            fetch(`/api/employees/${memberId}`, {
+                method: 'GET',
+                headers: {
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
+                }
+            })
                 .then(response => response.json())
                 .then(data => {
                     setEmployeeInfo(data);
@@ -43,7 +48,10 @@ const Employee = () => {
     const getEmployees = async () => {
         try {
             const employees = await fetch('/api/employees', {
-                method: 'GET'
+                method: 'GET',
+                headers: {
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
+                }
             });
 
             if (employees.ok) {
@@ -67,7 +75,7 @@ const Employee = () => {
 
     if (userPosition !== "관리자") {
         alert('관리자만 접근할 수 있는 페이지입니다.');
-        return <Navigate to={"/dashboard"} replace />;
+        return <Navigate to={"/dashboard"} replace/>;
     }
 
     const handleLogout = () => {
@@ -132,7 +140,8 @@ const Employee = () => {
                     onClick={handleLogout}
                 >
                     <div style={{padding: '20px'}}>
-                        <button className="logout-btn bg-charcoal" type="button" style={{width: '100%'}} onClick={logout}>
+                        <button className="logout-btn bg-charcoal" type="button" style={{width: '100%'}}
+                                onClick={logout}>
                             <div style={{paddingLeft: '5%', fontSize: '1.1rem'}}>LOGOUT</div>
                         </button>
                     </div>

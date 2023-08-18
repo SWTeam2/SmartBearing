@@ -35,6 +35,7 @@ const EmployeeCreate = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
                 },
                 body: JSON.stringify({employeeId}),
             });
@@ -88,6 +89,7 @@ const EmployeeCreate = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
                 },
                 body: JSON.stringify({
                     employeeId,
@@ -119,7 +121,7 @@ const EmployeeCreate = () => {
 
     if (userPosition !== "관리자") {
         alert('관리자만 접근할 수 있는 페이지입니다.');
-        return <Navigate to={"/dashboard"} replace />;
+        return <Navigate to={"/dashboard"} replace/>;
     }
 
     return (

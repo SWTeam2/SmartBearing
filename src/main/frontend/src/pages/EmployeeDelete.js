@@ -27,7 +27,10 @@ const EmployeeDelete = () => {
     const getEmployees = async () => {
         try {
             const employees = await fetch('/api/employees', {
-                method: 'GET'
+                method: 'GET',
+                headers: {
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
+                },
             });
 
             if (employees.ok) {
@@ -75,7 +78,11 @@ const EmployeeDelete = () => {
 
         try {
             const deleteEmployee = await fetch(`/api/employees/${selectedEmployee}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
+                },
             });
 
             if (deleteEmployee.ok) {
@@ -95,7 +102,7 @@ const EmployeeDelete = () => {
 
     if (userPosition !== "관리자") {
         alert('관리자만 접근할 수 있는 페이지입니다.');
-        return <Navigate to={"/dashboard"} replace />;
+        return <Navigate to={"/dashboard"} replace/>;
     }
 
     return (

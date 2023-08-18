@@ -6,8 +6,6 @@ import folders from "../images/folders.png";
 import user from "../images/user.png";
 import people from "../images/people.png";
 import bell from "../images/bell.png";
-import etc from "../images/etc.png";
-import message from "../images/message.png";
 import {useNavigate} from 'react-router-dom';
 import {logout} from "./useLogout.js";
 import useMemberId from "./useMemberId.js";
@@ -18,8 +16,13 @@ const Dashboard = () => {
     const [employeeInfo, setEmployeeInfo] = useState(null);
 
     useEffect(() => {
-        if(memberId) {
-            fetch(`/api/employees/${memberId}`)
+        if (memberId) {
+            fetch(`/api/employees/${memberId}`, {
+                method: 'GET',
+                headers: {
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
+                }
+            })
                 .then(response => response.json())
                 .then(data => {
                     setEmployeeInfo(data);
@@ -32,7 +35,98 @@ const Dashboard = () => {
 
     const handleLogout = () => {
         logout(handleNavigate);
+    }
+    const bearing = ['Bearing 1_1', 'Bearing 1_2', 'Bearing 1_3', 'Bearing 1_4', 'Bearing 1_5', 'Bearing 2_1', 'Bearing 2_2', 'Bearing 2_3', 'Bearing 2_4', 'Bearing 2_5', 'Bearing 3_1'];
+
+    const [selectedBearing, setSelectedBearing] = useState(bearing[0]);
+    const [logSensorData, setLogSensorData] = useState([]);
+    const [logPredictionData, setLogPredictionData] = useState([]);
+    const reversedLogSensorData = [...logSensorData].reverse();
+    const reversedLogPredictionData = [...logPredictionData].reverse();
+    let maxSensorId = 0;
+    let maxPredictionId = 0;
+
+    const getSensor = async () => {
+        try {
+            const response = await fetch(`/api/bearing/sensor/${selectedBearing}/${maxSensorId + 1}`, {
+                method: 'GET',
+                headers: {
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
+                }
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+
+                const newLogSensorData = responseData.map(responseData => ({
+                    id: responseData.id,
+                    timestamp: `${responseData.hour}:${responseData.minutes}:${responseData.second}:${responseData.microsecond}`,
+                    vert_accel: responseData.vert_accel,
+                    horiz_accel: responseData.horiz_accel
+                }));
+
+                maxSensorId = Math.max(...newLogSensorData.map(data => data.id));
+                setLogSensorData(prevData => [...prevData, ...newLogSensorData]);
+            } else {
+                console.log('데이터 불러오기 실패');
+            }
+        } catch (error) {
+            console.error('데이터 불러오기 에러 - ', error);
+        }
     };
+
+    const getPrediction = async () => {
+        try {
+            // const response = await fetch(`/api/bearing/prediction/${selectedBearing}/${maxPredictionId + 1}`, {
+            //     method: 'GET',
+            //     headers: {
+            //         'X-AUTH-TOKEN': localStorage.getItem("token")
+            //     }
+            // });
+            const response = await fetch(`/api/bearing/prediction/ex/1`, {
+                method: 'GET',
+                headers: {
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
+                }
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+
+                const newLogPredictionData = responseData.map(responseData => ({
+                    id: responseData.pred_id,
+                    timestamp: responseData.timestamp,
+                    prediction: responseData.prediction
+                }));
+
+                maxPredictionId = Math.max(...newLogPredictionData.map(data => data.id));
+                setLogPredictionData(prevData => [...prevData, ...newLogPredictionData]);
+            } else {
+                console.log('데이터 불러오기 실패');
+            }
+        } catch (error) {
+            console.error('데이터 불러오기 에러 - ', error);
+        }
+    };
+
+    useEffect(() => {
+        // selectedBearing 값이 변경될 때 호출되는 부분
+        setLogSensorData([]); // 초기화
+        setLogPredictionData([]); // 초기화
+        getSensor();
+        getPrediction();
+
+        // 10초마다 API 요청을 보내고 데이터 업데이트
+        const interval = setInterval(() => {
+            getSensor();
+            getPrediction();
+        }, 10000); // 10초마다 실행
+
+        // 컴포넌트가 unmount될 때 interval 정리
+        return () => {
+            clearInterval(interval);
+        };
+    }, [selectedBearing]);
 
     return (
         <div style={{display: 'flex', backgroundColor: '#F2F4F8', height: '100vh'}}>
@@ -112,41 +206,30 @@ const Dashboard = () => {
                          display: 'flex',
                          borderBottom: '1.5px solid #DDE1E6'
                      }}>
-                    <button className="bearing-btn" type="button">
-                        Bearing 1_1
-                    </button>
-                    <button className="bearing-btn" type="button">
-                        Bearing 1_2
-                    </button>
-                    <button className="bearing-btn" type="button">
-                        Bearing 1_3
-                    </button>
-                    <button className="bearing-btn" type="button">
-                        Bearing 1_4
-                    </button>
-                    <button className="bearing-btn" type="button">
-                        Bearing 1_5
-                    </button>
-                    <div style={{marginLeft: '15px', width: '15px', height: '20px', lineHeight: '50px'}}>
-                        <img src={etc} width="100%" alt="아이콘"/>
-                    </div>
+
+                    {bearing.map((bearingItem, index) => (
+                        <button
+                            key={index}
+                            className={`bearing-btn ${selectedBearing === bearingItem ? 'selected-bearing' : ''}`}
+                            type="button"
+                            onClick={() => {
+                                setSelectedBearing(bearingItem);
+                                getSensor(bearingItem);
+                                getPrediction(bearingItem);
+                            }}
+                        >
+                            {bearingItem}
+                        </button>
+                    ))}
                 </div>
 
                 <div style={{display: 'flex', justifyContent: 'space-between', marginLeft: '3%', marginRight: '3%'}}>
-                    <div className="dashboard drag-prevent" style={{
-                        display: 'flex',
-                        width: '46%',
-                        justifyContent: 'space-between',
-                        alignContent: 'center'
-                    }}>
+                    <div className="dashboard drag-prevent" style={{display: 'flex', width: '46%'}}>
                         <div>
                             <div style={{fontWeight: 'bold', color: '#8A96A8'}}>Contact</div>
                             <div className="dashboard-content">
                                 <div style={{fontWeight: 'bold'}}>데이터1팀 : 홍길동 (hgd@gmail.com)</div>
                             </div>
-                        </div>
-                        <div style={{marginRight: '10px', width: '20px', height: '50px', lineHeight: '65px'}}>
-                            <img src={message} width="100%" alt="아이콘"/>
                         </div>
                     </div>
 
@@ -171,52 +254,23 @@ const Dashboard = () => {
                 </div>
 
                 <div style={{display: 'flex', justifyContent: 'space-between', marginLeft: '3%', marginRight: '3%'}}>
-                    <div className="dashboard drag-prevent" style={{width: '20%', height: '250px', overflow: 'auto', marginRight: '1%'}}>
+                    <div className="dashboard drag-prevent"
+                         style={{width: '20%', height: '250px', overflow: 'auto', marginRight: '1%'}}>
                         <div style={{fontWeight: 'bold', fontSize: '18px', marginBottom: '20px'}}>Log - Prediction</div>
                         <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
                             <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>Timestamp</div>
                             <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>P</div>
                         </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 1</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 2</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 3</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 4</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 5</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 6</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 7</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 8</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 9</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 10</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
+
+                        {reversedLogPredictionData.map((log, index) => (
+                            <div
+                                key={index}
+                                style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}
+                            >
+                                <div style={{color: '#8A96A8', fontSize: '14px'}}>{log.timestamp}</div>
+                                <div style={{color: '#8A96A8', fontSize: '14px'}}>{log.prediction}</div>
+                            </div>
+                        ))}
                     </div>
 
                     <div className="dashboard drag-prevent" style={{width: '79%', height: '250px', overflow: 'auto'}}>
@@ -224,66 +278,29 @@ const Dashboard = () => {
                 </div>
 
                 <div style={{display: 'flex', justifyContent: 'space-between', marginLeft: '3%', marginRight: '3%'}}>
-                    <div className="dashboard drag-prevent" style={{width: '20%', height: '250px', overflow: 'auto', marginRight: '1%'}}>
+                    <div className="dashboard  drag-prevent"
+                         style={{width: '20%', height: '250px', overflow: 'auto', marginRight: '1%'}}>
                         <div style={{fontWeight: 'bold', fontSize: '18px', marginBottom: '20px'}}>Log - Amplitude</div>
                         <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
                             <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>Timestamp</div>
                             <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>V</div>
                             <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>H</div>
                         </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 1</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 2</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 3</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 4</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 5</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 6</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 7</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 8</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 9</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>Timestamp 10</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                            <div style={{color: '#8A96A8', fontSize: '14px'}}>00</div>
-                        </div>
+
+                        {reversedLogSensorData.map((log, index) => (
+                            <div
+                                key={index}
+                                style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}
+                            >
+                                <div style={{color: '#8A96A8', fontSize: '14px'}}>{log.timestamp}</div>
+                                <div style={{color: '#8A96A8', fontSize: '14px'}}>{log.vert_accel}</div>
+                                <div style={{color: '#8A96A8', fontSize: '14px'}}>{log.horiz_accel}</div>
+                            </div>
+                        ))}
                     </div>
 
-                    <div className="dashboard drag-prevent" style={{width: '37%', height: '250px', overflow: 'auto', marginRight: '1%'}}>
+                    <div className="dashboard drag-prevent"
+                         style={{width: '37%', height: '250px', overflow: 'auto', marginRight: '1%'}}>
                     </div>
 
                     <div className="dashboard drag-prevent" style={{width: '37%', height: '250px', overflow: 'auto'}}>
