@@ -28,7 +28,10 @@ const EmployeeUpdate = () => {
     const getEmployees = async () => {
         try {
             const employees = await fetch('/api/employees', {
-                method: 'GET'
+                method: 'GET',
+                headers: {
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
+                },
             });
 
             if (employees.ok) {
@@ -89,6 +92,7 @@ const EmployeeUpdate = () => {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
                 },
                 body: JSON.stringify({phone, department, position, inCharge}),
             });

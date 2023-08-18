@@ -16,8 +16,13 @@ const Dashboard = () => {
     const [employeeInfo, setEmployeeInfo] = useState(null);
 
     useEffect(() => {
-        if(memberId) {
-            fetch(`/api/employees/${memberId}`)
+        if (memberId) {
+            fetch(`/api/employees/${memberId}`, {
+                method: 'GET',
+                headers: {
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
+                }
+            })
                 .then(response => response.json())
                 .then(data => {
                     setEmployeeInfo(data);
@@ -44,7 +49,10 @@ const Dashboard = () => {
     const getSensor = async () => {
         try {
             const response = await fetch(`/api/bearing/sensor/${selectedBearing}/${maxSensorId + 1}`, {
-                method: 'GET'
+                method: 'GET',
+                headers: {
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
+                }
             });
 
             if (response.ok) {
@@ -70,10 +78,16 @@ const Dashboard = () => {
     const getPrediction = async () => {
         try {
             // const response = await fetch(`/api/bearing/prediction/${selectedBearing}/${maxPredictionId + 1}`, {
-            //     method: 'GET'
+            //     method: 'GET',
+            //     headers: {
+            //         'X-AUTH-TOKEN': localStorage.getItem("token")
+            //     }
             // });
             const response = await fetch(`/api/bearing/prediction/ex/1`, {
-                method: 'GET'
+                method: 'GET',
+                headers: {
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
+                }
             });
 
             if (response.ok) {

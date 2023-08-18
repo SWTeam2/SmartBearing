@@ -19,8 +19,13 @@ const Notification = () => {
     const [employeeInfo, setEmployeeInfo] = useState(null);
 
     useEffect(() => {
-        if(memberId) {
-            fetch(`/api/employees/${memberId}`)
+        if (memberId) {
+            fetch(`/api/employees/${memberId}`, {
+                method: 'GET',
+                headers: {
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
+                }
+            })
                 .then(response => response.json())
                 .then(data => {
                     setEmployeeInfo(data);
