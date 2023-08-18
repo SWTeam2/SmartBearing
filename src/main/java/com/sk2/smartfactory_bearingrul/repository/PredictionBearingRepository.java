@@ -42,7 +42,7 @@ public class PredictionBearingRepository {
         }
     }
 
-    public PredictionBearingDto findSensorById(String table, Long id) {
+    public PredictionBearingDto findById(String table, Long id) {
         try {
             return deserialize((String) redisTemplate.opsForValue().get(generateKey(table, id)));
         } catch (JsonProcessingException e) {
@@ -50,7 +50,7 @@ public class PredictionBearingRepository {
         }
     }
 
-    public List<PredictionBearingDto> getSensorListById(String table, Long id) {
+    public List<PredictionBearingDto> getListById(String table, Long id) {
         String pattern = "PredictionBearing:" + table + ":*";
         Set<String> keys = redisTemplate.keys(pattern);
 
