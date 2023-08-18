@@ -14,6 +14,6 @@ export const logout = async (handleNavigate) => {
             console.log('로그아웃 실패');
         }
     } catch (error) {
-        console.error('로그아웃 에러', error);
+        console.error('로그아웃 에러 - ', error);
     }
 };
