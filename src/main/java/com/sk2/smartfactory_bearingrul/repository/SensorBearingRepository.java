@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -70,6 +71,7 @@ public class SensorBearingRepository {
                             throw new RuntimeException(e);
                         }
                     })
+                    .sorted(Comparator.comparingLong(dto -> dto.getId()))
                     .collect(Collectors.toList());
         }
 

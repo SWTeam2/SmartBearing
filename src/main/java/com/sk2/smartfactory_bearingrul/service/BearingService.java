@@ -10,7 +10,9 @@ import com.sk2.smartfactory_bearingrul.repository.SensorBearingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -21,11 +23,17 @@ public class BearingService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public List<SensorBearingDto> parsingSensor(String data) throws JsonProcessingException {
-        return objectMapper.readValue(data, new TypeReference<List<SensorBearingDto>>() {});
+        return objectMapper.readValue(data, new TypeReference<List<SensorBearingDto>>() {
+                }).stream()
+                .sorted(Comparator.comparingLong(dto -> dto.getId()))
+                .collect(Collectors.toList());
     }
 
     public List<PredictionBearingDto> parsingPrediction(String data) throws JsonProcessingException {
-        return objectMapper.readValue(data, new TypeReference<List<PredictionBearingDto>>() {});
+        return objectMapper.readValue(data, new TypeReference<List<PredictionBearingDto>>() {
+                }).stream()
+                .sorted(Comparator.comparingLong(dto -> dto.getPred_id()))
+                .collect(Collectors.toList());
     }
 
     public List<SensorBearingDto> getSensorListById(String table, Long id) {
