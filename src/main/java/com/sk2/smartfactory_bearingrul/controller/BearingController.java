@@ -6,7 +6,6 @@ import com.sk2.smartfactory_bearingrul.dto.SensorBearingDto;
 import com.sk2.smartfactory_bearingrul.service.BearingService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
