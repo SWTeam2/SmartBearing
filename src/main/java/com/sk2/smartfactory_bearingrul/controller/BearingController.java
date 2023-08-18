@@ -27,7 +27,7 @@ public class BearingController {
 
     @ApiOperation(value = "센서 데이터 조회", notes = "table과 id를 입력 받아 해당 table에서 입력 받은 id 이후의 sensor data를 불러옵니다.")
     @GetMapping("/sensor/{table}/{id}")
-    public ResponseEntity<List<SensorBearingDto>> getSensorData(@PathVariable String table, @PathVariable String id) throws JsonProcessingException, JSONException {
+    public ResponseEntity<List<SensorBearingDto>> getSensorData(@PathVariable String table, @PathVariable String id) throws JsonProcessingException {
         // API 호출
         String apiUrl = "https://win1.i4624.tk/data/test_table_" + table.toLowerCase().replace(" ", "") + "/" + id;
         ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
@@ -42,7 +42,7 @@ public class BearingController {
 
     @ApiOperation(value = "예측 데이터 조회", notes = "table과 id를 입력 받아 해당 table에서 입력 받은 id 이후의 prediction data를 불러옵니다.")
     @GetMapping("/prediction/{table}/{id}")
-    public ResponseEntity<List<PredictionBearingDto>> getPredictionData(@PathVariable String table, @PathVariable String id) throws JsonProcessingException, JSONException {
+    public ResponseEntity<List<PredictionBearingDto>> getPredictionData(@PathVariable String table, @PathVariable String id) throws JsonProcessingException {
         // API 호출
         String apiUrl = "https://win1.i4624.tk/output/prediction_table_" + table.toLowerCase().replace(" ", "") + "/" + id;
         ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
