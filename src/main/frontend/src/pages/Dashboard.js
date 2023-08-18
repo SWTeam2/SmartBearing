@@ -36,6 +36,8 @@ const Dashboard = () => {
     const [selectedBearing, setSelectedBearing] = useState(bearing[0]);
     const [logSensorData, setLogSensorData] = useState([]);
     const [logPredictionData, setLogPredictionData] = useState([]);
+    const reversedLogSensorData = [...logSensorData].reverse();
+    const reversedLogPredictionData = [...logPredictionData].reverse();
 
     const logout = () => {
         // 로그아웃 기능을 여기에 추가합니다.
@@ -50,14 +52,13 @@ const Dashboard = () => {
             if (response.ok) {
                 const responseData = await response.json();
 
-                setLogSensorData(prevData => [
-                    ...prevData,
-                    ...responseData.map(responseData => ({
-                        timestamp: `${responseData.hour}:${responseData.minutes}:${responseData.second}:${responseData.microsecond}`,
-                        vert_accel: responseData.vert_accel,
-                        horiz_accel: responseData.horiz_accel
-                    }))
-                ]);
+                const newLogSensorData = responseData.map(responseData => ({
+                    timestamp: `${responseData.hour}:${responseData.minutes}:${responseData.second}:${responseData.microsecond}`,
+                    vert_accel: responseData.vert_accel,
+                    horiz_accel: responseData.horiz_accel
+                }));
+
+                setLogSensorData(newLogSensorData);
             } else {
                 console.log('데이터 불러오기 실패');
             }
@@ -77,15 +78,13 @@ const Dashboard = () => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                console.log(responseData);
 
-                setLogPredictionData(prevData => [
-                    ...prevData,
-                    ...responseData.map(responseData => ({
-                        timestamp: responseData.timestamp,
-                        prediction: responseData.prediction
-                    }))
-                ]);
+                const newLogPredictionData = responseData.map(responseData => ({
+                    timestamp: responseData.timestamp,
+                    prediction: responseData.prediction
+                }));
+
+                setLogPredictionData(newLogPredictionData);
             } else {
                 console.log('데이터 불러오기 실패');
             }
@@ -93,12 +92,6 @@ const Dashboard = () => {
             console.error('데이터 불러오기 에러 - ', error);
         }
     };
-
-    useEffect(() => {
-        // 컴포넌트가 렌더링될 때 한 번 실행되는 부분
-        getInitialSensor();
-        getInitialPrediction();
-    }, []);
 
     useEffect(() => {
         // selectedBearing 값이 변경될 때 호출되는 부분
@@ -247,7 +240,7 @@ const Dashboard = () => {
                             <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>P</div>
                         </div>
 
-                        {logPredictionData.reverse().map((log, index) => (
+                        {reversedLogPredictionData.map((log, index) => (
                             <div
                                 key={index}
                                 style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}
@@ -272,7 +265,7 @@ const Dashboard = () => {
                             <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>H</div>
                         </div>
 
-                        {logSensorData.reverse().map((log, index) => (
+                        {reversedLogSensorData.map((log, index) => (
                             <div
                                 key={index}
                                 style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}
