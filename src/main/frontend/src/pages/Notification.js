@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import '../App.css';
 import logo_X from "../images/logo_X.png";
 import label from "../images/label.png";
@@ -8,9 +8,29 @@ import chart from "../images/chart.png";
 import people from "../images/people.png";
 import {useNavigate} from 'react-router-dom';
 import {logout} from "./useLogout.js";
+import usePosition from "./usePosition.js";
+import useMemberId from "./useMemberId.js";
 
 const Notification = () => {
     const handleNavigate = useNavigate();
+    const userPosition = usePosition();
+    const memberId = useMemberId();
+
+    const [employeeInfo, setEmployeeInfo] = useState(null);
+
+    useEffect(() => {
+        if(memberId) {
+            fetch(`/api/employees/${memberId}`)
+                .then(response => response.json())
+                .then(data => {
+                    setEmployeeInfo(data);
+                })
+                .catch(error => {
+                    console.error('사원 정보 불러오기 에러 - ', error)
+                })
+        }
+    }, [memberId]);
+
     const handleLogout = () => {
         logout(handleNavigate);
     };
@@ -27,19 +47,19 @@ const Notification = () => {
                     <div className="sidebar-icon">
                         <img src={label} width="100%" alt="아이콘"/>
                     </div>
-                    <div className="sidebar-text">사원코드</div>
+                    <div className="sidebar-text">{employeeInfo?.employeeId}</div>
                 </div>
                 <div className="sidebar-row drag-prevent">
                     <div className="sidebar-icon">
                         <img src={folders} width="100%" alt="아이콘"/>
                     </div>
-                    <div className="sidebar-text">부서</div>
+                    <div className="sidebar-text">{employeeInfo?.department}</div>
                 </div>
                 <div className="sidebar-row drag-prevent">
                     <div className="sidebar-icon">
                         <img src={user} width="100%" alt="아이콘"/>
                     </div>
-                    <div className="sidebar-text">이름</div>
+                    <div className="sidebar-text">{employeeInfo?.name}</div>
                 </div>
 
                 <div style={{height: '1px', margin: '10% 10%', background: 'black'}}></div>
