@@ -56,4 +56,12 @@ public class EmployeeService {
         Optional<Member> member = memberRepository.findByEmployeeId(employeeId);
         member.ifPresent(memberRepository::delete);
     }
+
+    public EmployeeDto getEmployeeInfo(String memberId) {
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        Employee employee = employeeRepository.findByEmployeeId(member.getEmployeeId());
+
+        return EmployeeDto.from(employee);
+    }
 }

@@ -52,4 +52,11 @@ public class EmployeeController {
         employeeService.deleteEmployee(employeeId);
         return ResponseEntity.ok().build();
     }
+
+    @ApiOperation(value = "사원 정보 조회", notes = "입력 받은 사원 아이디에 해당하는 사원의 정보를 조회합니다.")
+    @GetMapping("/{memberId}")
+    public ResponseEntity<EmployeeDto> getEmployeeInfo(@PathVariable String memberId) {
+        EmployeeDto employeeDto = employeeService.getEmployeeInfo(memberId);
+        return ResponseEntity.ok(employeeDto);
+    }
 }

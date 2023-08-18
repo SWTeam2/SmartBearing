@@ -29,7 +29,7 @@ public class MemberController {
 
     @ApiOperation(value = "로그아웃", notes = "발급 받은 JWT 토큰을 삭제합니다.")
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletRequest servletRequest) {
+    public ResponseEntity<Void> logout() {
         memberService.logout();
         return ResponseEntity.ok().build();
     }
