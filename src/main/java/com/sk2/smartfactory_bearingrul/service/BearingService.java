@@ -28,6 +28,15 @@ public class BearingService {
         return objectMapper.readValue(data, new TypeReference<List<PredictionBearingDto>>() {});
     }
 
+    public List<SensorBearingDto> getSensorListById(String table, Long id) {
+        return sensorBearingRepository.getListById(table, id);
+    }
+
+    public List<PredictionBearingDto> getPredictionListById(String table, Long id) {
+        return predictionBearingRepository.getListById(table, id);
+    }
+
+
     public void saveSensor(String table, String data) throws JsonProcessingException {
         List<SensorBearingDto> sensorDataList = parsingSensor(data); // 리스트로 변환
         sensorDataList.forEach(sensorData -> sensorBearingRepository.save(table, sensorData)); // 각 dto를 redis에 저장
