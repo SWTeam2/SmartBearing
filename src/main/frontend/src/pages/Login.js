@@ -39,7 +39,7 @@ const Login = () => {
                 setPassword('');
             }
         } catch (error) {
-            console.error('로그인 에러', error);
+            console.error('로그인 에러 - ', error);
         }
     };
 

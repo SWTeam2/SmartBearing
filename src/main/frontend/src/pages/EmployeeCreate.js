@@ -1,5 +1,7 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import '../App.css';
+import usePosition from "./usePosition.js";
+import {Navigate} from "react-router-dom";
 
 const EmployeeCreate = () => {
     const [employeeId, setEmployeeId] = useState('');
@@ -13,6 +15,15 @@ const EmployeeCreate = () => {
     const [inCharge, setInCharge] = useState('');
     const [isDisabled_pre, setIsDisabled_pre] = useState(true);
     const [isDisabled_post, setIsDisabled_post] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const userPosition = usePosition();
+
+    useEffect(() => {
+        if (userPosition !== null) {
+            setIsLoading(false);
+        }
+    }, [userPosition]);
 
     const handleGenderChange = (event) => {
         setGender(event.target.value);
@@ -101,6 +112,15 @@ const EmployeeCreate = () => {
             console.error('사원 생성 에러 - ', error);
         }
     };
+
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
+
+    if (userPosition !== "관리자") {
+        alert('관리자만 접근할 수 있는 페이지입니다.');
+        return <Navigate to={"/dashboard"} replace />;
+    }
 
     return (
         <div style={{backgroundColor: '#F2F4F8', width: '100%', height: '100%', margin: 0}}>
