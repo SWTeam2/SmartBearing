@@ -27,30 +27,34 @@ public class BearingController {
     @ApiOperation(value = "센서 데이터 조회", notes = "table과 id를 입력 받아 해당 table에서 입력 받은 id 이후의 sensor data를 불러옵니다.")
     @GetMapping("/sensor/{table}/{id}")
     public ResponseEntity<List<SensorBearingDto>> getSensorData(@PathVariable String table, @PathVariable String id) throws JsonProcessingException {
-        // API 호출
-        String apiUrl = "https://win1.i4624.tk/data/test_table_" + table.toLowerCase().replace(" ", "") + "/" + id;
-        ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
-
-        if (response.getStatusCode() == HttpStatus.OK) {
-            bearingService.saveSensor(table, response.getBody()); // redis 저장
-            return ResponseEntity.ok().body(bearingService.parsingSensor(response.getBody())); // API response 값을 List 형태로 변경하여 return
-        } else {
-            return ResponseEntity.status(response.getStatusCode()).build();
+        if (bearingService.existsSensorById(table, Long.parseLong(id))) { // redis에 해당 id에 대한 데이터가 존재하면
+            return ResponseEntity.ok().body(bearingService.getSensorListById(table, Long.parseLong(id))); // id ~ id 이후의 데이터 리스트를 반환
+        } else { // redis에 해당 id에 대한 데이터가 존재하지 않으면
+            String apiUrl = "https://win1.i4624.tk/data/test_table_" + table.toLowerCase().replace(" ", "") + "/" + id;
+            ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class); // DB API에 요청을 보내서 id ~ id 이후의 데이터 리스트를 읽어옴
+            if (response.getStatusCode() == HttpStatus.OK) { // status가 ok이면
+                bearingService.saveSensor(table, response.getBody()); // 데이터를 redis에 저장
+                return ResponseEntity.ok().body(bearingService.parsingSensor(response.getBody())); // API response 값을 리스트로 변환하여 return
+            } else {  // status가 ok가 아니면
+                return ResponseEntity.status(response.getStatusCode()).build(); // DB API reponse의 status를 반환
+            }
         }
     }
 
     @ApiOperation(value = "예측 데이터 조회", notes = "table과 id를 입력 받아 해당 table에서 입력 받은 id 이후의 prediction data를 불러옵니다.")
     @GetMapping("/prediction/{table}/{id}")
     public ResponseEntity<List<PredictionBearingDto>> getPredictionData(@PathVariable String table, @PathVariable String id) throws JsonProcessingException {
-        // API 호출
-        String apiUrl = "https://win1.i4624.tk/output/prediction_table_" + table.toLowerCase().replace(" ", "") + "/" + id;
-        ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
-
-        if (response.getStatusCode() == HttpStatus.OK) {
-            bearingService.savePrediction(table, response.getBody()); // redis 저장
-            return ResponseEntity.ok().body(bearingService.parsingPrediction(response.getBody())); // API response 값을 List 형태로 변경하여 return
-        } else {
-            return ResponseEntity.status(response.getStatusCode()).build();
+        if (bearingService.existsPredictionById(table, Long.parseLong(id))) { // redis에 해당 id에 대한 데이터가 존재하면
+            return ResponseEntity.ok().body(bearingService.getPredictionListById(table, Long.parseLong(id))); // id ~ id 이후의 데이터 리스트를 반환
+        } else { // redis에 해당 id에 대한 데이터가 존재하지 않으면
+            String apiUrl = "https://win1.i4624.tk/output/prediction_table_" + table.toLowerCase().replace(" ", "") + "/" + id;
+            ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class); // DB API에 요청을 보내서 id ~ id 이후의 데이터 리스트를 읽어옴
+            if (response.getStatusCode() == HttpStatus.OK) { // status가 ok이면
+                bearingService.savePrediction(table, response.getBody()); // 데이터를 redis에 저장
+                return ResponseEntity.ok().body(bearingService.parsingPrediction(response.getBody())); // API response 값을 리스트로 변환하여 return
+            } else { // status가 ok가 아니면
+                return ResponseEntity.status(response.getStatusCode()).build(); // DB API reponse의 status를 반환
+            }
         }
     }
 }

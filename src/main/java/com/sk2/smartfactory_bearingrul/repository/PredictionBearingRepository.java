@@ -43,6 +43,12 @@ public class PredictionBearingRepository {
         }
     }
 
+    public boolean existsById(String table, Long id) {
+        if (redisTemplate.opsForValue().get(generateKey(table, id)) != null)
+            return true;
+        return false;
+    }
+
     public PredictionBearingDto findById(String table, Long id) {
         try {
             return deserialize((String) redisTemplate.opsForValue().get(generateKey(table, id)));

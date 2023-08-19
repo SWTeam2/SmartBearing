@@ -36,6 +36,14 @@ public class BearingService {
                 .collect(Collectors.toList());
     }
 
+    public boolean existsSensorById(String table, Long id) {
+        return sensorBearingRepository.existsById(table, id);
+    }
+
+    public boolean existsPredictionById(String table, Long id) {
+        return predictionBearingRepository.existsById(table, id);
+    }
+
     public List<SensorBearingDto> getSensorListById(String table, Long id) {
         return sensorBearingRepository.getListById(table, id);
     }
