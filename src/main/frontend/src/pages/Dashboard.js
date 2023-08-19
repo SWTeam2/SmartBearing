@@ -39,15 +39,42 @@ const Dashboard = () => {
     const bearing = ['Bearing 1_1', 'Bearing 1_2', 'Bearing 1_3', 'Bearing 1_4', 'Bearing 1_5', 'Bearing 2_1', 'Bearing 2_2', 'Bearing 2_3', 'Bearing 2_4', 'Bearing 2_5', 'Bearing 3_1'];
 
     const [selectedBearing, setSelectedBearing] = useState(bearing[0]);
+
+    const [liskLevel, setLiskLevel] = useState("Low");
+    const [liskColor, setLiskColor] = useState("green");
+    const [predictionValue, setPredictionValue] = useState("-");
+    const [inChargeData, setInChargeData] = useState("-");
+
     const [logSensorData, setLogSensorData] = useState([]);
     const [logPredictionData, setLogPredictionData] = useState([]);
     const reversedLogSensorData = [...logSensorData].reverse();
     const reversedLogPredictionData = [...logPredictionData].reverse();
-    const [predictionValue, setPredictionValue] = useState("-"); // State 추가
-    const [liskLevel, setLiskLevel] = useState("Low");
-    const [liskColor, setLiskColor] = useState("green");
+
     let maxSensorId = 0;
     let maxPredictionId = 0;
+
+    const getCharge = async () => {
+        try {
+            const response = await fetch(`/api/employees/inCharge/${selectedBearing}`, {
+                method: 'GET',
+                headers: {
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
+                }
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                const formattedData = `${responseData.department} : ${responseData.name} (${responseData.email})`;
+                setInChargeData(formattedData);
+            } else {
+                setInChargeData("-");
+                console.log('담당 사원 불러오기 실패');
+            }
+        } catch (error) {
+            setInChargeData("-");
+            console.error('담당 사원 불러오기 에러 - ', error);
+        }
+    };
 
     const getSensor = async () => {
         try {
@@ -135,11 +162,14 @@ const Dashboard = () => {
 
     useEffect(() => {
         // selectedBearing 값이 변경될 때 호출되는 부분
+        getCharge();
         setLogSensorData([]); // 초기화
         setLogPredictionData([]); // 초기화
         getSensor();
         getPrediction();
+    }, [selectedBearing]);
 
+    useEffect(() => {
         // 10초마다 API 요청을 보내고 데이터 업데이트
         const interval = setInterval(() => {
             getSensor();
@@ -150,7 +180,7 @@ const Dashboard = () => {
         return () => {
             clearInterval(interval);
         };
-    }, [selectedBearing]);
+    }, []);
 
     return (
         <div style={{display: 'flex', backgroundColor: '#F2F4F8', height: '100vh'}}>
@@ -252,7 +282,7 @@ const Dashboard = () => {
                         <div>
                             <div style={{fontWeight: 'bold', color: '#8A96A8'}}>Contact</div>
                             <div className="dashboard-content">
-                                <div style={{fontWeight: 'bold'}}>데이터1팀 : 홍길동 (hgd@gmail.com)</div>
+                                <div style={{fontWeight: 'bold'}}>{inChargeData}</div>
                             </div>
                         </div>
                     </div>
