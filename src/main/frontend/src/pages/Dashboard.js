@@ -94,7 +94,7 @@ const Dashboard = () => {
             //         'X-AUTH-TOKEN': localStorage.getItem("token")
             //     }
             // });
-            const response = await fetch(`/api/bearing/prediction/ex/1`, {
+            const response = await fetch(`/api/bearing/prediction/ex/${maxPredictionId + 1}`, {
                 method: 'GET',
                 headers: {
                     'X-AUTH-TOKEN': localStorage.getItem("token")
@@ -107,7 +107,7 @@ const Dashboard = () => {
                 const newLogPredictionData = responseData.map(responseData => ({
                     id: responseData.pred_id,
                     timestamp: responseData.timestamp,
-                    prediction: responseData.prediction
+                    prediction: parseFloat(responseData.prediction).toFixed(6)
                 }));
 
                 maxPredictionId = Math.max(...newLogPredictionData.map(data => data.id));
