@@ -43,6 +43,9 @@ const Dashboard = () => {
     const [logPredictionData, setLogPredictionData] = useState([]);
     const reversedLogSensorData = [...logSensorData].reverse();
     const reversedLogPredictionData = [...logPredictionData].reverse();
+    const [predictionValue, setPredictionValue] = useState("-"); // State 추가
+    const [liskLevel, setLiskLevel] = useState("Low");
+    const [liskColor, setLiskColor] = useState("green");
     let maxSensorId = 0;
     let maxPredictionId = 0;
 
@@ -101,6 +104,27 @@ const Dashboard = () => {
 
                 maxPredictionId = Math.max(...newLogPredictionData.map(data => data.id));
                 setLogPredictionData(prevData => [...prevData, ...newLogPredictionData]);
+
+                // maxPredictionId에 해당하는 데이터의 prediction 값을 찾아서 저장
+                const maxPredictionData = newLogPredictionData.find(data => data.id === maxPredictionId);
+                const predictionValue = maxPredictionData ? maxPredictionData.prediction : "0000000";
+                setPredictionValue(predictionValue);
+
+                // 예측 값에 따라서 "low", "medium", "high"와 글씨 색상 설정
+                let liskLevel = "Low";
+                let liskColor = "#25A249";
+
+                if (predictionValue >= 0.4 && predictionValue < 0.7) {
+                    liskLevel = "Medium";
+                    liskColor = "#F1C21B";
+                } else if (predictionValue >= 0.7) {
+                    liskLevel = "High";
+                    liskColor = "#DA1E28";
+                }
+
+                setLiskLevel(liskLevel);
+                setLiskColor(liskColor);
+
             } else {
                 console.log('데이터 불러오기 실패');
             }
@@ -238,7 +262,7 @@ const Dashboard = () => {
                         <div>
                             <div style={{fontWeight: 'bold', color: '#8A96A8'}}>Lisk Level</div>
                             <div className="dashboard-content">
-                                <div style={{fontWeight: 'bold', color: '#DA1E28'}}>High</div>
+                                <div style={{fontWeight: 'bold', color: liskColor}}>{liskLevel}</div>
                             </div>
                         </div>
                     </div>
@@ -247,7 +271,7 @@ const Dashboard = () => {
                         <div>
                             <div style={{fontWeight: 'bold', color: '#8A96A8'}}>Prediction</div>
                             <div className="dashboard-content">
-                                <div style={{fontWeight: 'bold'}}>0000000</div>
+                                <div style={{fontWeight: 'bold'}}>{predictionValue}</div>
                             </div>
                         </div>
                     </div>
