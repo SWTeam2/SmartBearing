@@ -8,30 +8,11 @@ import people from "../images/people.png";
 import bell from "../images/bell.png";
 import {useNavigate} from 'react-router-dom';
 import {logout} from "./useLogout.js";
-import useMemberId from "./useMemberId.js";
+import useLoginInfo from "./useLoginInfo.js";
 
 const Dashboard = () => {
     const handleNavigate = useNavigate();
-    const memberId = useMemberId();
-    const [employeeInfo, setEmployeeInfo] = useState(null);
-
-    useEffect(() => {
-        if (memberId) {
-            fetch(`/api/employees/${memberId}`, {
-                method: 'GET',
-                headers: {
-                    'X-AUTH-TOKEN': localStorage.getItem("token")
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    setEmployeeInfo(data);
-                })
-                .catch(error => {
-                    console.error('사원 정보 불러오기 에러 - ', error)
-                })
-        }
-    }, [memberId]);
+    const employeeInfo = useLoginInfo();
 
     const handleLogout = () => {
         logout(handleNavigate);

@@ -10,31 +10,12 @@ import {useNavigate} from 'react-router-dom';
 import {logout} from "./useLogout.js";
 import usePosition from "./usePosition.js";
 import useMemberId from "./useMemberId.js";
+import useLoginInfo from "./useLoginInfo.js";
 
 const Notification = () => {
     const handleNavigate = useNavigate();
     const userPosition = usePosition();
-    const memberId = useMemberId();
-
-    const [employeeInfo, setEmployeeInfo] = useState(null);
-
-    useEffect(() => {
-        if (memberId) {
-            fetch(`/api/employees/${memberId}`, {
-                method: 'GET',
-                headers: {
-                    'X-AUTH-TOKEN': localStorage.getItem("token")
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    setEmployeeInfo(data);
-                })
-                .catch(error => {
-                    console.error('사원 정보 불러오기 에러 - ', error)
-                })
-        }
-    }, [memberId]);
+    const employeeInfo = useLoginInfo();
 
     const handleLogout = () => {
         logout(handleNavigate);
