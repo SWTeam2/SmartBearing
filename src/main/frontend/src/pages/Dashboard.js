@@ -8,30 +8,13 @@ import people from "../images/people.png";
 import bell from "../images/bell.png";
 import {useNavigate} from 'react-router-dom';
 import {logout} from "./useLogout.js";
-import useMemberId from "./useMemberId.js";
+import useLoginInfo from "./useLoginInfo.js";
+import usePosition from "./usePosition.js";
 
 const Dashboard = () => {
     const handleNavigate = useNavigate();
-    const memberId = useMemberId();
-    const [employeeInfo, setEmployeeInfo] = useState(null);
-
-    useEffect(() => {
-        if (memberId) {
-            fetch(`/api/employees/${memberId}`, {
-                method: 'GET',
-                headers: {
-                    'X-AUTH-TOKEN': localStorage.getItem("token")
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    setEmployeeInfo(data);
-                })
-                .catch(error => {
-                    console.error('사원 정보 불러오기 에러 - ', error)
-                })
-        }
-    }, [memberId]);
+    const employeeInfo = useLoginInfo();
+    const userPosition = usePosition();
 
     const handleLogout = () => {
         logout(handleNavigate);
@@ -39,12 +22,42 @@ const Dashboard = () => {
     const bearing = ['Bearing 1_1', 'Bearing 1_2', 'Bearing 1_3', 'Bearing 1_4', 'Bearing 1_5', 'Bearing 2_1', 'Bearing 2_2', 'Bearing 2_3', 'Bearing 2_4', 'Bearing 2_5', 'Bearing 3_1'];
 
     const [selectedBearing, setSelectedBearing] = useState(bearing[0]);
+
+    const [liskLevel, setLiskLevel] = useState("Low");
+    const [liskColor, setLiskColor] = useState("green");
+    const [predictionValue, setPredictionValue] = useState("-");
+    const [inChargeData, setInChargeData] = useState("-");
+
     const [logSensorData, setLogSensorData] = useState([]);
     const [logPredictionData, setLogPredictionData] = useState([]);
     const reversedLogSensorData = [...logSensorData].reverse();
     const reversedLogPredictionData = [...logPredictionData].reverse();
+
     let maxSensorId = 0;
     let maxPredictionId = 0;
+
+    const getCharge = async () => {
+        try {
+            const response = await fetch(`/api/employees/inCharge/${selectedBearing}`, {
+                method: 'GET',
+                headers: {
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
+                }
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                const formattedData = `${responseData.department} : ${responseData.name} (${responseData.email})`;
+                setInChargeData(formattedData);
+            } else {
+                setInChargeData("-");
+                console.log('담당 사원 불러오기 실패');
+            }
+        } catch (error) {
+            setInChargeData("-");
+            console.error('담당 사원 불러오기 에러 - ', error);
+        }
+    };
 
     const getSensor = async () => {
         try {
@@ -83,7 +96,7 @@ const Dashboard = () => {
             //         'X-AUTH-TOKEN': localStorage.getItem("token")
             //     }
             // });
-            const response = await fetch(`/api/bearing/prediction/ex/1`, {
+            const response = await fetch(`/api/bearing/prediction/ex/${maxPredictionId + 1}`, {
                 method: 'GET',
                 headers: {
                     'X-AUTH-TOKEN': localStorage.getItem("token")
@@ -96,11 +109,32 @@ const Dashboard = () => {
                 const newLogPredictionData = responseData.map(responseData => ({
                     id: responseData.pred_id,
                     timestamp: responseData.timestamp,
-                    prediction: responseData.prediction
+                    prediction: parseFloat(responseData.prediction).toFixed(6)
                 }));
 
                 maxPredictionId = Math.max(...newLogPredictionData.map(data => data.id));
                 setLogPredictionData(prevData => [...prevData, ...newLogPredictionData]);
+
+                // maxPredictionId에 해당하는 데이터의 prediction 값을 찾아서 저장
+                const maxPredictionData = newLogPredictionData.find(data => data.id === maxPredictionId);
+                const predictionValue = maxPredictionData ? maxPredictionData.prediction : "0000000";
+                setPredictionValue(predictionValue);
+
+                // 예측 값에 따라서 "low", "medium", "high"와 글씨 색상 설정
+                let liskLevel = "Low";
+                let liskColor = "#25A249";
+
+                if (predictionValue >= 0.4 && predictionValue < 0.7) {
+                    liskLevel = "Medium";
+                    liskColor = "#F1C21B";
+                } else if (predictionValue >= 0.7) {
+                    liskLevel = "High";
+                    liskColor = "#DA1E28";
+                }
+
+                setLiskLevel(liskLevel);
+                setLiskColor(liskColor);
+
             } else {
                 console.log('데이터 불러오기 실패');
             }
@@ -111,11 +145,14 @@ const Dashboard = () => {
 
     useEffect(() => {
         // selectedBearing 값이 변경될 때 호출되는 부분
+        getCharge();
         setLogSensorData([]); // 초기화
         setLogPredictionData([]); // 초기화
         getSensor();
         getPrediction();
+    }, [selectedBearing]);
 
+    useEffect(() => {
         // 10초마다 API 요청을 보내고 데이터 업데이트
         const interval = setInterval(() => {
             getSensor();
@@ -126,7 +163,7 @@ const Dashboard = () => {
         return () => {
             clearInterval(interval);
         };
-    }, [selectedBearing]);
+    }, []);
 
     return (
         <div style={{display: 'flex', backgroundColor: '#F2F4F8', height: '100vh'}}>
@@ -157,17 +194,19 @@ const Dashboard = () => {
 
                 <div style={{height: '1px', margin: '10% 10%', background: 'black'}}></div>
 
-                <div
-                    className="sidebar-row drag-prevent cursor-pointer hover-bg-grey"
-                    onClick={() => {
-                        window.location.href = '/employee';
-                    }}
-                >
-                    <div className="sidebar-icon">
-                        <img src={people} width="100%" alt="아이콘"/>
+                {userPosition !== "관리자" ? "" : (
+                    <div
+                        className="sidebar-row drag-prevent cursor-pointer hover-bg-grey"
+                        onClick={() => {
+                            window.location.href = '/employee';
+                        }}
+                    >
+                        <div className="sidebar-icon">
+                            <img src={people} width="100%" alt="아이콘"/>
+                        </div>
+                        <div className="sidebar-text">Employee</div>
                     </div>
-                    <div className="sidebar-text">Employee</div>
-                </div>
+                )}
                 <div
                     className="sidebar-row drag-prevent cursor-pointer hover-bg-grey"
                     onClick={() => {
@@ -228,7 +267,7 @@ const Dashboard = () => {
                         <div>
                             <div style={{fontWeight: 'bold', color: '#8A96A8'}}>Contact</div>
                             <div className="dashboard-content">
-                                <div style={{fontWeight: 'bold'}}>데이터1팀 : 홍길동 (hgd@gmail.com)</div>
+                                <div style={{fontWeight: 'bold'}}>{inChargeData}</div>
                             </div>
                         </div>
                     </div>
@@ -238,7 +277,7 @@ const Dashboard = () => {
                         <div>
                             <div style={{fontWeight: 'bold', color: '#8A96A8'}}>Lisk Level</div>
                             <div className="dashboard-content">
-                                <div style={{fontWeight: 'bold', color: '#DA1E28'}}>High</div>
+                                <div style={{fontWeight: 'bold', color: liskColor}}>{liskLevel}</div>
                             </div>
                         </div>
                     </div>
@@ -247,7 +286,7 @@ const Dashboard = () => {
                         <div>
                             <div style={{fontWeight: 'bold', color: '#8A96A8'}}>Prediction</div>
                             <div className="dashboard-content">
-                                <div style={{fontWeight: 'bold'}}>0000000</div>
+                                <div style={{fontWeight: 'bold'}}>{predictionValue}</div>
                             </div>
                         </div>
                     </div>

@@ -56,7 +56,16 @@ public class EmployeeController {
     @ApiOperation(value = "사원 정보 조회", notes = "입력 받은 사원 아이디에 해당하는 사원의 정보를 조회합니다.")
     @GetMapping("/{memberId}")
     public ResponseEntity<EmployeeDto> getEmployeeInfo(@PathVariable String memberId) {
-        EmployeeDto employeeDto = employeeService.getEmployeeInfo(memberId);
-        return ResponseEntity.ok(employeeDto);
+        return ResponseEntity.ok().body(employeeService.getEmployeeInfo(memberId));
+    }
+
+    @ApiOperation(value = "담당 사원 정보 조회", notes = "입력 받은 table을 담당하는 사원의 정보를 조회합니다.")
+    @GetMapping("/inCharge/{table}")
+    public ResponseEntity<EmployeeDto> getEmployeeInCharge(@PathVariable String table) {
+
+        ResponseEntity<EmployeeDto> employee = ResponseEntity.ok().body(employeeService.getEmployeeInCharge(table));
+        System.out.println("employee = " + employee);
+
+        return ResponseEntity.ok().body(employeeService.getEmployeeInCharge(table));
     }
 }

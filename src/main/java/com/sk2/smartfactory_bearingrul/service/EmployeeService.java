@@ -64,4 +64,11 @@ public class EmployeeService {
 
         return EmployeeDto.from(employee);
     }
+
+    public EmployeeDto getEmployeeInCharge(String table) {
+        Employee employee = employeeRepository.findByInCharge(table)
+                .orElseThrow(() -> new IllegalArgumentException("담당하는 회원이 존재하지 않습니다."));
+
+        return EmployeeDto.from(employee);
+    }
 }

@@ -4,6 +4,8 @@ import com.sk2.smartfactory_bearingrul.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
     boolean existsByEmployeeId(String employeeId);
@@ -11,4 +13,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
     Employee findByEmployeeId(String employeeId);
     Employee findByEmployeeIdAndEmail(String employeeId, String email);
+    Optional<Employee> findByInCharge(String inCharge);
 }

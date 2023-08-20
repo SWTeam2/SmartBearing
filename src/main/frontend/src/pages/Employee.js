@@ -10,34 +10,15 @@ import bell from "../images/bell.png";
 import {Navigate, useNavigate} from 'react-router-dom';
 import {logout} from "./useLogout.js";
 import usePosition from "./usePosition.js";
-import useMemberId from "./useMemberId.js";
+import useLoginInfo from "./useLoginInfo.js";
 
 const Employee = () => {
     const handleNavigate = useNavigate();
     const userPosition = usePosition();
-    const memberId = useMemberId();
+    const employeeInfo = useLoginInfo();
 
     const [employeeData, setEmployeeData] = useState([]);
-    const [employeeInfo, setEmployeeInfo] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        if (memberId) {
-            fetch(`/api/employees/${memberId}`, {
-                method: 'GET',
-                headers: {
-                    'X-AUTH-TOKEN': localStorage.getItem("token")
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    setEmployeeInfo(data);
-                })
-                .catch(error => {
-                    console.error('사원 정보 불러오기 에러 - ', error)
-                })
-        }
-    }, [memberId]);
 
     useEffect(() => {
         if (userPosition !== null) {
