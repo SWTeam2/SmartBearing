@@ -55,7 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests() // 요청에 대한 접근 권한을 설정
                 .antMatchers("/v3/api-docs/**", "/swagger/**", "/swagger-ui", "/swagger-ui/**", "/swagger-resources/**").permitAll() // 인증 없이 접근 가능하도록 허용하는 엔드포인트
-                .antMatchers("/api/members/login", "/api/members/signup/**").permitAll() // 인증 없이 접근 가능하도록 허용하는 엔드포인트
+                .antMatchers("/api/members/login", "/api/members/signup/**", "/api/dashboard/notification").permitAll() // 인증 없이 접근 가능하도록 허용하는 엔드포인트
                 .antMatchers("/employee").hasRole("ADMIN")
                 .anyRequest().authenticated(); //  나머지 모든 요청은 인증 필요
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
