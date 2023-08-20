@@ -9,7 +9,6 @@ import people from "../images/people.png";
 import {useNavigate} from 'react-router-dom';
 import {logout} from "./useLogout.js";
 import usePosition from "./usePosition.js";
-import useMemberId from "./useMemberId.js";
 import useLoginInfo from "./useLoginInfo.js";
 
 const Notification = () => {
@@ -61,17 +60,19 @@ const Notification = () => {
                     </div>
                     <div className="sidebar-text">Dashboard</div>
                 </div>
-                <div
-                    className="sidebar-row drag-prevent cursor-pointer hover-bg-grey"
-                    onClick={() => {
-                        window.location.href = '/employee';
-                    }}
-                >
-                    <div className="sidebar-icon">
-                        <img src={people} width="100%" alt="아이콘"/>
+                {userPosition !== "관리자" ? "" : (
+                    <div
+                        className="sidebar-row drag-prevent cursor-pointer hover-bg-grey"
+                        onClick={() => {
+                            window.location.href = '/employee';
+                        }}
+                    >
+                        <div className="sidebar-icon">
+                            <img src={people} width="100%" alt="아이콘"/>
+                        </div>
+                        <div className="sidebar-text">Employee</div>
                     </div>
-                    <div className="sidebar-text">Employee</div>
-                </div>
+                )}
 
                 <div
                     style={{position: 'fixed', bottom: '0', left: '0', width: '18vw'}}

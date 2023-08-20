@@ -9,10 +9,12 @@ import bell from "../images/bell.png";
 import {useNavigate} from 'react-router-dom';
 import {logout} from "./useLogout.js";
 import useLoginInfo from "./useLoginInfo.js";
+import usePosition from "./usePosition.js";
 
 const Dashboard = () => {
     const handleNavigate = useNavigate();
     const employeeInfo = useLoginInfo();
+    const userPosition = usePosition();
 
     const handleLogout = () => {
         logout(handleNavigate);
@@ -192,17 +194,19 @@ const Dashboard = () => {
 
                 <div style={{height: '1px', margin: '10% 10%', background: 'black'}}></div>
 
-                <div
-                    className="sidebar-row drag-prevent cursor-pointer hover-bg-grey"
-                    onClick={() => {
-                        window.location.href = '/employee';
-                    }}
-                >
-                    <div className="sidebar-icon">
-                        <img src={people} width="100%" alt="아이콘"/>
+                {userPosition !== "관리자" ? "" : (
+                    <div
+                        className="sidebar-row drag-prevent cursor-pointer hover-bg-grey"
+                        onClick={() => {
+                            window.location.href = '/employee';
+                        }}
+                    >
+                        <div className="sidebar-icon">
+                            <img src={people} width="100%" alt="아이콘"/>
+                        </div>
+                        <div className="sidebar-text">Employee</div>
                     </div>
-                    <div className="sidebar-text">Employee</div>
-                </div>
+                )}
                 <div
                     className="sidebar-row drag-prevent cursor-pointer hover-bg-grey"
                     onClick={() => {
