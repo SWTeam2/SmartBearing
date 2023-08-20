@@ -27,7 +27,7 @@ public class BearingController {
     private final BearingService bearingService;
     private final NotificationService notificationService;
 
-    @ApiOperation(value = "센서 데이터 조회", notes = "table과 id를 입력 받아 해당 table에서 입력 받은 id 이후의 sensor data를 불러옵니다.")
+    @ApiOperation(value = "센서 데이터 조회", notes = "table과 id를 입력 받아 sensor data를 불러옵니다.")
     @GetMapping("/sensor/{table}/{id}")
     public ResponseEntity<List<SensorBearingDto>> getSensorData(@PathVariable String table, @PathVariable String id) throws JsonProcessingException {
         if (bearingService.existsSensorById(table, Long.parseLong(id))) { // redis에 해당 id에 대한 데이터가 존재하면
@@ -44,7 +44,7 @@ public class BearingController {
         }
     }
 
-    @ApiOperation(value = "예측 데이터 조회", notes = "table과 id를 입력 받아 해당 table에서 입력 받은 id 이후의 prediction data를 불러옵니다.")
+    @ApiOperation(value = "예측 데이터 조회", notes = "table과 id를 입력 받아 prediction data를 불러옵니다.")
     @GetMapping("/prediction/{table}/{id}")
     public ResponseEntity<List<PredictionBearingDto>> getPredictionData(@PathVariable String table, @PathVariable String id) throws JsonProcessingException {
         if (bearingService.existsPredictionById(table, Long.parseLong(id))) { // redis에 해당 id에 대한 데이터가 존재하면
