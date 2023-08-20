@@ -14,12 +14,7 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
-//    @PostMapping
-//    public ResponseEntity<String> postNotification(@RequestBody long predictionId) {
-//        notificationService.postNotificationByPrediction(predictionId);
-//        return ResponseEntity.ok("Notification posted.");
-//    }
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<NotificationDto>> getAllNotifications() {
         List<NotificationDto> notifications = notificationService.getAllNotifications();
         return ResponseEntity.ok(notifications);

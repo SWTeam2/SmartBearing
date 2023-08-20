@@ -12,9 +12,7 @@ import java.time.LocalDateTime;
 public class NotificationDto {
     private long notificationId;
     private String publisher;
-    private double prediction;
     private String message;
-    private String inferTime;
     private LocalDateTime createdAt;
 
     public static NotificationDto from(Notification entity) {
