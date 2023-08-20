@@ -11,15 +11,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class NotificationDto {
     private long notificationId;
+    private String publisher;
     private double prediction;
-    private LocalDateTime inferTime;
+    private String message;
+    private String inferTime;
     private LocalDateTime createdAt;
 
     public static NotificationDto from(Notification entity) {
         return NotificationDto.builder()
                 .notificationId(entity.getNotificationId())
-                .prediction(entity.getPrediction())
-                .inferTime(entity.getInferTime())
+                .publisher(entity.getPublisher())
+                .message(entity.getMessage())
                 .createdAt(entity.getCreatedAt())
                 .build();
     }
@@ -27,8 +29,8 @@ public class NotificationDto {
     public Notification toEntity() {
         return Notification.builder()
                 .notificationId(notificationId)
-                .prediction(prediction)
-                .inferTime(inferTime)
+                .publisher(publisher)
+                .message(message)
                 .createdAt(createdAt)
                 .build();
     }

@@ -1,10 +1,15 @@
 package com.sk2.smartfactory_bearingrul.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sk2.smartfactory_bearingrul.dto.NotificationDto;
+import com.sk2.smartfactory_bearingrul.dto.PredictionBearingDto;
 import com.sk2.smartfactory_bearingrul.entity.Notification;
 import com.sk2.smartfactory_bearingrul.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +18,7 @@ import java.util.stream.Collectors;
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
+    private final BearingService bearingService;
 
     public List<NotificationDto> getAllNotifications() {
         List<Notification> notifications = notificationRepository.findAll();
@@ -21,22 +27,32 @@ public class NotificationService {
                 .collect(Collectors.toList());
     }
 
-    public void check(Double prediction) {
-        if (prediction != null) {
-            String range;
-            if (prediction < 0.4) {
-                range = "Low";
-            } else if (prediction < 0.7) {
-                range = "Medium";
-            } else {
-                range = "High";
-            }
-            Notification notification = Notification.builder()
-                    .prediction(prediction)
-                    .build();
+    public void checkNotification(String table, String data) throws JsonProcessingException {
+        List<PredictionBearingDto> predictionDataList = bearingService.parsingPrediction(data);
+
+        // 알림을 생성할 리스트
+        List<NotificationDto> notifications = new ArrayList<>();
+
+        predictionDataList.stream().filter(p -> p.getPrediction() >= 0.9)
+                .forEach(p -> {
+                    NotificationDto dto = NotificationDto.builder()
+                            .publisher(table)
+                            .message("고장날 확률이 " + p.getPrediction() + " 이상으로, 주의가 필요합니다.")
+                            .build();
+                    notifications.add(dto);
+                });
+
+        if (!notifications.isEmpty()) {
+            saveNotifications(notifications);
         }
     }
-    public void postNotification(Notification notification) {
-        
+
+    private void saveNotifications(List<NotificationDto> notifications) {
+        notifications.forEach(notification -> {
+            Notification entity = notification.toEntity();
+            notificationRepository.save(entity);
+        });
     }
+
+
 }

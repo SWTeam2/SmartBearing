@@ -23,10 +23,10 @@ public class Notification {
     private Long notificationId;
 
     @Column(nullable = false, updatable = false)
-    private double prediction;
+    private String publisher;
 
-    @Column(name = "infer_time",nullable = false, updatable = false)
-    private LocalDateTime inferTime;
+    @Column(nullable = false, updatable = false)
+    private String message;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @CreatedDate
