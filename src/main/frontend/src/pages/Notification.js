@@ -16,9 +16,35 @@ const Notification = () => {
     const userPosition = usePosition();
     const employeeInfo = useLoginInfo();
 
+    const [notificationData, setNotificationData] = useState([]);
+
     const handleLogout = () => {
         logout(handleNavigate);
     };
+
+    const getNotis = async () => {
+        try {
+            const notifications = await fetch('/api/dashboard/notification', {
+                method: 'GET',
+                headers: {
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
+                }
+            });
+
+            if (notifications.ok) {
+                const notificationData = await notifications.json();
+                setNotificationData(notificationData);
+            } else {
+                console.log('알림 목록 불러오기 실패');
+            }
+        } catch (error) {
+            console.error('알 목록 불러오기 에러 - ', error);
+        }
+    };
+
+    useEffect(() => {
+        getNotis();
+    }, []);
 
     return (
         <div style={{display: 'flex', backgroundColor: '#F2F4F8', height: '100vh'}}>
@@ -91,27 +117,16 @@ const Notification = () => {
                 <div className="row" style={{margin: '3% 4%'}}>
                     <div className="layout-title">Notification</div>
                 </div>
-                <div className="main-noti drag-prevent">
-                    <div style={{fontWeight:'bold', color: '#8A96A8'}} >2023.08.16 12:00:00</div>
-                    <div className="main-noti-content">
-                        <div style={{width: '13%', fontWeight:'bold'}}>Bearing1_1</div>
-                        <div style={{width: '87%', wordWrap: 'break-word'}}>Notification Message</div>
+
+                {notificationData.map((noti) => (
+                    <div className="main-noti drag-prevent">
+                        <div style={{fontWeight:'bold', color: '#8A96A8'}} >{noti.createdAt.replace('T', ' ').split('.')[0]}</div>
+                        <div className="main-noti-content">
+                            <div style={{width: '13%', fontWeight:'bold'}}>{noti.publisher}</div>
+                            <div style={{width: '87%', wordWrap: 'break-word'}}>{noti.message}</div>
+                        </div>
                     </div>
-                </div>
-                <div className="main-noti drag-prevent">
-                    <div style={{fontWeight:'bold', color: '#8A96A8'}} >2023.08.16 12:00:00</div>
-                    <div className="main-noti-content">
-                        <div style={{width: '13%', fontWeight:'bold'}}>Bearing1_1</div>
-                        <div style={{width: '87%', wordWrap: 'break-word'}}>Notification Message</div>
-                    </div>
-                </div>
-                <div className="main-noti drag-prevent">
-                    <div style={{fontWeight:'bold', color: '#8A96A8'}} >2023.08.16 12:00:00</div>
-                    <div className="main-noti-content">
-                        <div style={{width: '13%', fontWeight:'bold'}}>Bearing1_1</div>
-                        <div style={{width: '87%', wordWrap: 'break-word'}}>Notification Message</div>
-                    </div>
-                </div>
+                ))}
             </div>
         </div>
     );
