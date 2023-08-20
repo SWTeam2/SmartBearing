@@ -10,6 +10,7 @@ import {useNavigate} from 'react-router-dom';
 import {logout} from "./useLogout.js";
 import useLoginInfo from "./useLoginInfo.js";
 import usePosition from "./usePosition.js";
+import Chart from "./Chart.js";
 
 const Dashboard = () => {
     const handleNavigate = useNavigate();
@@ -35,6 +36,9 @@ const Dashboard = () => {
 
     let maxSensorId = 0;
     let maxPredictionId = 0;
+
+    const [predictionLabels, setPredictionLabels] = useState([]);
+    const [predictionDatas, setPredictionDatas] = useState([]);
 
     const getCharge = async () => {
         try {
@@ -135,6 +139,11 @@ const Dashboard = () => {
                 setLiskLevel(liskLevel);
                 setLiskColor(liskColor);
 
+                setPredictionLabels(logPredictionData.map(log => log.timestamp));
+                setPredictionDatas(logPredictionData.map(log => parseFloat(log.prediction).toFixed(6)));
+
+                console.log(predictionLabels);
+                console.log(predictionDatas);
             } else {
                 console.log('데이터 불러오기 실패');
             }
@@ -312,7 +321,8 @@ const Dashboard = () => {
                         ))}
                     </div>
 
-                    <div className="dashboard drag-prevent" style={{width: '79%', height: '250px', overflow: 'auto'}}>
+                    <div className="dashboard drag-prevent" style={{display:"flex", width: '79%', height: '250px', overflow: 'auto', justifyContent: "center"}}>
+                        <Chart label={"Prediction"} datasetLabels={predictionLabels} datasetData={predictionDatas}/>
                     </div>
                 </div>
 
