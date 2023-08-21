@@ -1,14 +1,41 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Navigate, Outlet} from 'react-router-dom';
+import AuthService from './AuthService.js';
 
-const AuthGuard = ({ children }) => {
-    const token = localStorage.getItem('token');
-    if(!token || token === "undefined") {
-        alert("로그인 후 접근 가능한 페이지입니다.");
-        return <Navigate to={"/"} replace />;
+const AuthGuard = ({children}) => {
+    const [isTokenValid, setTokenValid] = useState(null);
+
+    const authService = new AuthService();
+
+    useEffect(() => {
+        const checkTokenValidity = async () => {
+            try {
+                const accessAllowed = await authService.checkAccess();
+
+                if (!accessAllowed) {
+                    alert('접근 방식이 올바르지 않습니다. 다시 로그인 해주세요.');
+                    authService.logout();
+                }
+
+                setTokenValid(accessAllowed);
+            } catch (error) {
+                console.error('Error while checking token validity: ', error);
+                setTokenValid(false);
+            }
+        };
+
+        checkTokenValidity();
+    }, []);
+
+    if (isTokenValid === null) {
+        return <p>Loading...</p>;
     }
 
-    return <Outlet />;
-};
+    if (!isTokenValid) {
+        return <Navigate to={"/"} replace/>;
+    }
+
+    return <Outlet/>;
+}
 
 export default AuthGuard;
