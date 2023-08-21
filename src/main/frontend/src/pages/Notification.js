@@ -24,7 +24,7 @@ const Notification = () => {
 
     const getNotis = async () => {
         try {
-            const notifications = await fetch('/api/dashboard/notification', {
+            const notifications = await fetch('/api/notification', {
                 method: 'GET',
                 headers: {
                     'X-AUTH-TOKEN': localStorage.getItem("token")
@@ -38,7 +38,7 @@ const Notification = () => {
                 console.log('알림 목록 불러오기 실패');
             }
         } catch (error) {
-            console.error('알 목록 불러오기 에러 - ', error);
+            console.error('알림 목록 불러오기 에러 - ', error);
         }
     };
 

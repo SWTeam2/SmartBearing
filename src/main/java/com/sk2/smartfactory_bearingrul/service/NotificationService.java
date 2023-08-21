@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +34,7 @@ public class NotificationService {
         // 알림을 생성할 리스트
         List<NotificationDto> notifications = new ArrayList<>();
 
-        predictionDataList.stream().filter(p -> p.getPrediction() >= 0.4)
+        predictionDataList.stream().filter(p -> p.getPrediction() >= 0.9)
                 .forEach(p -> {
                     NotificationDto dto = NotificationDto.builder()
                             .publisher(table)
@@ -55,4 +56,7 @@ public class NotificationService {
     }
 
 
+    public long getCountNewNoti(String createdAt) {
+        return notificationRepository.countByCreatedAtAfter(LocalDateTime.parse(createdAt.replace("Z", "")));
+    }
 }

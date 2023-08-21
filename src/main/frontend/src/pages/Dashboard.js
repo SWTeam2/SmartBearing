@@ -10,6 +10,8 @@ import {useNavigate} from 'react-router-dom';
 import {logout} from "./useLogout.js";
 import useLoginInfo from "./useLoginInfo.js";
 import usePosition from "./usePosition.js";
+import PredictionChart from "./PredictionChart.js";
+import SensorChart from "./SensorChart.js";
 
 const Dashboard = () => {
     const handleNavigate = useNavigate();
@@ -19,7 +21,12 @@ const Dashboard = () => {
     const handleLogout = () => {
         logout(handleNavigate);
     }
+
     const bearing = ['Bearing 1_1', 'Bearing 1_2', 'Bearing 1_3', 'Bearing 1_4', 'Bearing 1_5', 'Bearing 2_1', 'Bearing 2_2', 'Bearing 2_3', 'Bearing 2_4', 'Bearing 2_5', 'Bearing 3_1'];
+
+    const now = new Date();
+    const data = now.toISOString();
+    const [newNoti, setNewNoti] = useState(0);
 
     const [selectedBearing, setSelectedBearing] = useState(bearing[0]);
 
@@ -33,8 +40,15 @@ const Dashboard = () => {
     const reversedLogSensorData = [...logSensorData].reverse();
     const reversedLogPredictionData = [...logPredictionData].reverse();
 
-    let maxSensorId = 0;
-    let maxPredictionId = 0;
+    const [maxSensorId, setMaxSensorId] = useState(0);
+    const [maxPredictionId, setMaxPredictionId] = useState(0);
+
+    const [predictionLabels, setPredictionLabels] = useState([]);
+    const [predictionDatas, setPredictionDatas] = useState([]);
+
+    const [sensorLabels, setSensorLabels] = useState([]);
+    const [sensorDatas_v, setSensorDatas_v] = useState([]);
+    const [sensorDatas_h, setSensorDatas_h] = useState([]);
 
     const getCharge = async () => {
         try {
@@ -59,6 +73,26 @@ const Dashboard = () => {
         }
     };
 
+    const getNewNoti = async () => {
+        try {
+            const response = await fetch(`/api/notification/countAfter/${data}`, {
+                method: 'GET',
+                headers: {
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
+                }
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                setNewNoti(responseData);
+            } else {
+                console.log('알림 전체 개수 불러오기 실패');
+            }
+        } catch (error) {
+            console.error('알림 전체 개수 불러오기 에러 - ', error);
+        }
+    };
+
     const getSensor = async () => {
         try {
             const response = await fetch(`/api/bearing/sensor/${selectedBearing}/${maxSensorId + 1}`, {
@@ -78,7 +112,6 @@ const Dashboard = () => {
                     horiz_accel: responseData.horiz_accel
                 }));
 
-                maxSensorId = Math.max(...newLogSensorData.map(data => data.id));
                 setLogSensorData(prevData => [...prevData, ...newLogSensorData]);
             } else {
                 console.log('데이터 불러오기 실패');
@@ -90,13 +123,7 @@ const Dashboard = () => {
 
     const getPrediction = async () => {
         try {
-            // const response = await fetch(`/api/bearing/prediction/${selectedBearing}/${maxPredictionId + 1}`, {
-            //     method: 'GET',
-            //     headers: {
-            //         'X-AUTH-TOKEN': localStorage.getItem("token")
-            //     }
-            // });
-            const response = await fetch(`/api/bearing/prediction/ex/${maxPredictionId + 1}`, {
+            const response = await fetch(`/api/bearing/prediction/${selectedBearing}/${maxPredictionId + 1}`, {
                 method: 'GET',
                 headers: {
                     'X-AUTH-TOKEN': localStorage.getItem("token")
@@ -112,29 +139,7 @@ const Dashboard = () => {
                     prediction: parseFloat(responseData.prediction).toFixed(6)
                 }));
 
-                maxPredictionId = Math.max(...newLogPredictionData.map(data => data.id));
                 setLogPredictionData(prevData => [...prevData, ...newLogPredictionData]);
-
-                // maxPredictionId에 해당하는 데이터의 prediction 값을 찾아서 저장
-                const maxPredictionData = newLogPredictionData.find(data => data.id === maxPredictionId);
-                const predictionValue = maxPredictionData ? maxPredictionData.prediction : "0000000";
-                setPredictionValue(predictionValue);
-
-                // 예측 값에 따라서 "low", "medium", "high"와 글씨 색상 설정
-                let liskLevel = "Low";
-                let liskColor = "#25A249";
-
-                if (predictionValue >= 0.4 && predictionValue < 0.7) {
-                    liskLevel = "Medium";
-                    liskColor = "#F1C21B";
-                } else if (predictionValue >= 0.7) {
-                    liskLevel = "High";
-                    liskColor = "#DA1E28";
-                }
-
-                setLiskLevel(liskLevel);
-                setLiskColor(liskColor);
-
             } else {
                 console.log('데이터 불러오기 실패');
             }
@@ -144,18 +149,89 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
+        // 10초마다 API 요청을 보내고 데이터 업데이트
+        const interval = setInterval(() => {
+            getNewNoti();
+        }, 10000); // 10초마다 실행
+
+        // 컴포넌트가 unmount될 때 interval 정리
+        return () => {
+            clearInterval(interval);
+        };
+    }, [newNoti]);
+
+    useEffect(() => {
         // selectedBearing 값이 변경될 때 호출되는 부분
         getCharge();
-        setLogSensorData([]); // 초기화
-        setLogPredictionData([]); // 초기화
+        setLogSensorData([]);
+        setLogPredictionData([]);
+        setMaxSensorId(0);
+        setMaxPredictionId(0);
+        setSensorLabels([]);
+        setSensorDatas_v([]);
+        setSensorDatas_h([]);
+        setPredictionLabels([]);
+        setPredictionDatas([]);
+        setLiskLevel("Low");
+        setLiskColor("#25A249");
+        setPredictionValue("0000000");
         getSensor();
         getPrediction();
     }, [selectedBearing]);
 
     useEffect(() => {
+        setMaxSensorId(Math.max(...logSensorData.map(data => data.id)));
+    }, [logSensorData]);
+
+    useEffect(() => {
+        setSensorLabels(logSensorData.map(log => log.timestamp));
+        setSensorDatas_v(logSensorData.map(log => parseFloat(log.vert_accel)));
+        setSensorDatas_h(logSensorData.map(log => parseFloat(log.horiz_accel)));
+    }, [maxSensorId]);
+
+    useEffect(() => {
         // 10초마다 API 요청을 보내고 데이터 업데이트
         const interval = setInterval(() => {
             getSensor();
+        }, 10000); // 10초마다 실행
+
+        // 컴포넌트가 unmount될 때 interval 정리
+        return () => {
+            clearInterval(interval);
+        };
+    }, [sensorLabels, sensorDatas_v, sensorDatas_h]);
+
+    useEffect(() => {
+        setMaxPredictionId(Math.max(...logPredictionData.map(data => data.id)));
+
+        const maxPredictionData = logPredictionData.find(data => data.id === maxPredictionId);
+        const predictionValue = maxPredictionData ? maxPredictionData.prediction : "0000000";
+        setPredictionValue(predictionValue);
+    }, [logPredictionData]);
+
+    useEffect(() => {
+        setPredictionLabels(logPredictionData.map(log => log.timestamp));
+        setPredictionDatas(logPredictionData.map(log => parseFloat(log.prediction).toFixed(6)));
+
+        // 예측 값에 따라서 "low", "medium", "high"와 글씨 색상 설정
+        let liskLevel = "Low";
+        let liskColor = "#25A249";
+
+        if (predictionValue >= 0.4 && predictionValue < 0.7) {
+            liskLevel = "Medium";
+            liskColor = "#F1C21B";
+        } else if (predictionValue >= 0.7) {
+            liskLevel = "High";
+            liskColor = "#DA1E28";
+        }
+
+        setLiskLevel(liskLevel);
+        setLiskColor(liskColor);
+    }, [maxPredictionId, predictionValue]);
+
+    useEffect(() => {
+        // 10초마다 API 요청을 보내고 데이터 업데이트
+        const interval = setInterval(() => {
             getPrediction();
         }, 10000); // 10초마다 실행
 
@@ -163,7 +239,7 @@ const Dashboard = () => {
         return () => {
             clearInterval(interval);
         };
-    }, []);
+    }, [predictionLabels, predictionDatas, liskLevel, liskColor]);
 
     return (
         <div style={{display: 'flex', backgroundColor: '#F2F4F8', height: '100vh'}}>
@@ -217,6 +293,13 @@ const Dashboard = () => {
                         <img src={bell} width="100%" alt="아이콘"/>
                     </div>
                     <div className="sidebar-text">Notification</div>
+
+                    {newNoti.valueOf() > 0 ? (
+                        <div style={{display: "flex"}}>
+                            <div>+</div>
+                            <div style={{paddingLeft: "3px"}}>{newNoti}</div>
+                        </div>
+                    ) : ""}
                 </div>
 
                 <div
@@ -294,7 +377,7 @@ const Dashboard = () => {
 
                 <div style={{display: 'flex', justifyContent: 'space-between', marginLeft: '3%', marginRight: '3%'}}>
                     <div className="dashboard drag-prevent"
-                         style={{width: '20%', height: '250px', overflow: 'auto', marginRight: '1%'}}>
+                         style={{width: '20%', height: '350px', overflow: 'auto', marginRight: '1%'}}>
                         <div style={{fontWeight: 'bold', fontSize: '18px', marginBottom: '20px'}}>Log - Prediction</div>
                         <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
                             <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>Timestamp</div>
@@ -312,13 +395,20 @@ const Dashboard = () => {
                         ))}
                     </div>
 
-                    <div className="dashboard drag-prevent" style={{width: '79%', height: '250px', overflow: 'auto'}}>
+                    <div className="dashboard drag-prevent" style={{
+                        display: "flex",
+                        width: '79%',
+                        height: '350px',
+                        overflow: 'auto',
+                        justifyContent: "center"
+                    }}>
+                        <PredictionChart datasetLabel={predictionLabels} datasetData={predictionDatas}/>
                     </div>
                 </div>
 
                 <div style={{display: 'flex', justifyContent: 'space-between', marginLeft: '3%', marginRight: '3%'}}>
                     <div className="dashboard  drag-prevent"
-                         style={{width: '20%', height: '250px', overflow: 'auto', marginRight: '1%'}}>
+                         style={{width: '20%', height: '350px', overflow: 'auto', marginRight: '1%'}}>
                         <div style={{fontWeight: 'bold', fontSize: '18px', marginBottom: '20px'}}>Log - Amplitude</div>
                         <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
                             <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>Timestamp</div>
@@ -338,11 +428,15 @@ const Dashboard = () => {
                         ))}
                     </div>
 
-                    <div className="dashboard drag-prevent"
-                         style={{width: '37%', height: '250px', overflow: 'auto', marginRight: '1%'}}>
-                    </div>
-
-                    <div className="dashboard drag-prevent" style={{width: '37%', height: '250px', overflow: 'auto'}}>
+                    <div className="dashboard drag-prevent" style={{
+                        display: "flex",
+                        width: '79%',
+                        height: '350px',
+                        overflow: 'auto',
+                        justifyContent: "center"
+                    }}>
+                        <SensorChart datasetLabel={sensorLabels} datasetData_v={sensorDatas_v}
+                                     datasetData_h={sensorDatas_h}/>
                     </div>
                 </div>
 

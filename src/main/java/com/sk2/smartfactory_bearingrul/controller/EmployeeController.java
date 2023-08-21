@@ -18,7 +18,7 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
 
-    @ApiOperation(value = "사원 목록 조회", notes = "테이블의 모든 사원 정보를 불러옵니다.")
+    @ApiOperation(value = "사원 목록 조회", notes = "테이블의 모든 사원 정보를 조회합니다.")
     @GetMapping
     public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
         List<EmployeeDto> employees = employeeService.getAllEmployees();
@@ -41,7 +41,6 @@ public class EmployeeController {
     @ApiOperation(value = "사원 수정", notes = "사원의 연락처, 부서, 직급, 담당을 수정합니다.")
     @PutMapping("/{employeeId}")
     public ResponseEntity<Void> updateEmployee(@PathVariable String employeeId, @RequestBody EmployeeDto employeeDto) {
-        System.out.println("employeeId = " + employeeId);
         employeeService.updateEmployee(employeeId, employeeDto);
         return ResponseEntity.ok().build();
     }
@@ -62,10 +61,6 @@ public class EmployeeController {
     @ApiOperation(value = "담당 사원 정보 조회", notes = "입력 받은 table을 담당하는 사원의 정보를 조회합니다.")
     @GetMapping("/inCharge/{table}")
     public ResponseEntity<EmployeeDto> getEmployeeInCharge(@PathVariable String table) {
-
-        ResponseEntity<EmployeeDto> employee = ResponseEntity.ok().body(employeeService.getEmployeeInCharge(table));
-        System.out.println("employee = " + employee);
-
         return ResponseEntity.ok().body(employeeService.getEmployeeInCharge(table));
     }
 }
