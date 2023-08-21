@@ -10,7 +10,8 @@ import {useNavigate} from 'react-router-dom';
 import {logout} from "./useLogout.js";
 import useLoginInfo from "./useLoginInfo.js";
 import usePosition from "./usePosition.js";
-import Chart from "./Chart.js";
+import PredictionChart from "./PredictionChart.js";
+import SensorChart from "./SensorChart.js";
 
 const Dashboard = () => {
     const handleNavigate = useNavigate();
@@ -39,6 +40,10 @@ const Dashboard = () => {
 
     const [predictionLabels, setPredictionLabels] = useState([]);
     const [predictionDatas, setPredictionDatas] = useState([]);
+
+    const [sensorLabels, setSensorLabels] = useState([]);
+    const [sensorDatas_v, setSensorDatas_v] = useState([]);
+    const [sensorDatas_h, setSensorDatas_h] = useState([]);
 
     const getCharge = async () => {
         try {
@@ -153,6 +158,12 @@ const Dashboard = () => {
         getSensor();
         getPrediction();
     }, [selectedBearing]);
+
+    useEffect(() => {
+        setSensorLabels(logSensorData.map(log => log.timestamp));
+        setSensorDatas_v(logSensorData.map(log => parseFloat(log.vert_accel)));
+        setSensorDatas_h(logSensorData.map(log => parseFloat(log.horiz_accel)));
+    }, [logSensorData]);
 
     useEffect(() => {
         setPredictionLabels(logPredictionData.map(log => log.timestamp));
@@ -320,7 +331,7 @@ const Dashboard = () => {
                     </div>
 
                     <div className="dashboard drag-prevent" style={{display:"flex", width: '79%', height: '350px', overflow: 'auto', justifyContent: "center"}}>
-                        <Chart key={predictionLabels.join('-')} label={"Prediction"} datasetLabel={predictionLabels} datasetData={predictionDatas}/>
+                        <PredictionChart datasetLabel={predictionLabels} datasetData={predictionDatas}/>
                     </div>
                 </div>
 
@@ -346,11 +357,8 @@ const Dashboard = () => {
                         ))}
                     </div>
 
-                    <div className="dashboard drag-prevent"
-                         style={{width: '37%', height: '350px', overflow: 'auto', marginRight: '1%'}}>
-                    </div>
-
-                    <div className="dashboard drag-prevent" style={{width: '37%', height: '350px', overflow: 'auto'}}>
+                    <div className="dashboard drag-prevent" style={{display:"flex", width: '79%', height: '350px', overflow: 'auto', justifyContent: "center"}}>
+                        <SensorChart datasetLabel={sensorLabels} datasetData_v={sensorDatas_v} datasetData_h={sensorDatas_h}/>
                     </div>
                 </div>
 

@@ -21,12 +21,16 @@ ChartJS.register(
     Legend
 );
 
-function Chart({ label, datasetLabel, datasetData }) {
+function PredictionChart({ datasetLabel, datasetData }) {
     const options = {
         responsive: true,
         plugins: {
             legend: {
                 position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Prediction',
             }
         },
     };
@@ -35,7 +39,7 @@ function Chart({ label, datasetLabel, datasetData }) {
         labels: datasetLabel,
         datasets: [
             {
-                label: label,
+                label: "Prediction",
                 data: datasetData,
                 borderColor: '#A2A9B0',
                 backgroundColor: 'white',
@@ -46,4 +50,4 @@ function Chart({ label, datasetLabel, datasetData }) {
     return <Line options={options} data={data} width={550} height={200}/>;
 }
 
-export default Chart;
+export default PredictionChart;
