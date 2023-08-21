@@ -27,6 +27,11 @@ function SensorChart({ datasetLabel, datasetData_v, datasetData_h }) {
     const options = {
         maintainAspectRatio: false,
         responsive: true,
+        elements: {
+            point: {
+                radius: 0,
+            },
+        },
         plugins: {
             legend: {
                 position: 'top',
@@ -52,13 +57,11 @@ function SensorChart({ datasetLabel, datasetData_v, datasetData_h }) {
                 label: "Vertical",
                 data: datasetData_v,
                 borderColor: '#8A96A8',
-                backgroundColor: 'white',
             },
             {
                 label: "Horizontal",
                 data: datasetData_h,
                 borderColor: '#697077',
-                backgroundColor: 'white',
             }
         ],
     };
