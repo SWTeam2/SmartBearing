@@ -16,6 +16,12 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
+    @GetMapping
+    public ResponseEntity<List<NotificationDto>> getAllNotifications() {
+        List<NotificationDto> notifications = notificationService.getAllNotifications();
+        return ResponseEntity.ok(notifications);
+    }
+
     @GetMapping("/countAfter/{createdAt}")
     public ResponseEntity<Long> getCountByCreatedAt(@PathVariable String createdAt) {
         return ResponseEntity.ok(notificationService.getCountNewNoti(createdAt));
