@@ -32,7 +32,7 @@ function Chart({ label, datasetLabel, datasetData }) {
     };
 
     const data = {
-        datasetLabel,
+        labels: datasetLabel,
         datasets: [
             {
                 label: label,
