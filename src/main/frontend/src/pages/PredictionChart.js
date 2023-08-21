@@ -23,14 +23,11 @@ ChartJS.register(
 
 function PredictionChart({ datasetLabel, datasetData }) {
     const options = {
+        maintainAspectRatio: false,
         responsive: true,
         plugins: {
             legend: {
                 position: 'top',
-            },
-            title: {
-                display: true,
-                text: 'Prediction',
             }
         },
     };
@@ -47,7 +44,7 @@ function PredictionChart({ datasetLabel, datasetData }) {
         ],
     };
 
-    return <Line options={options} data={data} width={550} height={200}/>;
+    return <Line options={options} data={data}/>;
 }
 
 export default PredictionChart;

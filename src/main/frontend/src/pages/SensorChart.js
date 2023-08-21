@@ -23,15 +23,12 @@ ChartJS.register(
 
 function SensorChart({ datasetLabel, datasetData_v, datasetData_h }) {
     const options = {
+        maintainAspectRatio: false,
         responsive: true,
         plugins: {
             legend: {
                 position: 'top',
             }
-        },
-        title: {
-            display: true,
-            text: 'Amplitude',
         }
     };
 
@@ -53,7 +50,7 @@ function SensorChart({ datasetLabel, datasetData_v, datasetData_h }) {
         ],
     };
 
-    return <Line options={options} data={data} width={550} height={200}/>;
+    return <Line options={options} data={data}/>;
 }
 
 export default SensorChart;
