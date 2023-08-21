@@ -303,7 +303,7 @@ const Dashboard = () => {
 
                 <div style={{display: 'flex', justifyContent: 'space-between', marginLeft: '3%', marginRight: '3%'}}>
                     <div className="dashboard drag-prevent"
-                         style={{width: '20%', height: '250px', overflow: 'auto', marginRight: '1%'}}>
+                         style={{width: '20%', height: '350px', overflow: 'auto', marginRight: '1%'}}>
                         <div style={{fontWeight: 'bold', fontSize: '18px', marginBottom: '20px'}}>Log - Prediction</div>
                         <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
                             <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>Timestamp</div>
@@ -321,14 +321,14 @@ const Dashboard = () => {
                         ))}
                     </div>
 
-                    <div className="dashboard drag-prevent" style={{display:"flex", width: '79%', height: '250px', overflow: 'auto', justifyContent: "center"}}>
+                    <div className="dashboard drag-prevent" style={{display:"flex", width: '79%', height: '350px', overflow: 'auto', justifyContent: "center"}}>
                         <Chart label={"Prediction"} datasetLabels={predictionLabels} datasetData={predictionDatas}/>
                     </div>
                 </div>
 
                 <div style={{display: 'flex', justifyContent: 'space-between', marginLeft: '3%', marginRight: '3%'}}>
                     <div className="dashboard  drag-prevent"
-                         style={{width: '20%', height: '250px', overflow: 'auto', marginRight: '1%'}}>
+                         style={{width: '20%', height: '350px', overflow: 'auto', marginRight: '1%'}}>
                         <div style={{fontWeight: 'bold', fontSize: '18px', marginBottom: '20px'}}>Log - Amplitude</div>
                         <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '6px'}}>
                             <div style={{fontWeight: 'bold', color: '#8A96A8', fontSize: '14px'}}>Timestamp</div>
@@ -349,10 +349,10 @@ const Dashboard = () => {
                     </div>
 
                     <div className="dashboard drag-prevent"
-                         style={{width: '37%', height: '250px', overflow: 'auto', marginRight: '1%'}}>
+                         style={{width: '37%', height: '350px', overflow: 'auto', marginRight: '1%'}}>
                     </div>
 
-                    <div className="dashboard drag-prevent" style={{width: '37%', height: '250px', overflow: 'auto'}}>
+                    <div className="dashboard drag-prevent" style={{width: '37%', height: '350px', overflow: 'auto'}}>
                     </div>
                 </div>
 
