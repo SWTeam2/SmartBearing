@@ -18,7 +18,7 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
 
-    @ApiOperation(value = "사원 목록 조회", notes = "테이블의 모든 사원 정보를 불러옵니다.")
+    @ApiOperation(value = "사원 목록 조회", notes = "테이블의 모든 사원 정보를 조회합니다.")
     @GetMapping
     public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
         List<EmployeeDto> employees = employeeService.getAllEmployees();
