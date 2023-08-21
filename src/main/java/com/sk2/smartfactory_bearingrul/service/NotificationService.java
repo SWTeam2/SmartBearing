@@ -34,7 +34,7 @@ public class NotificationService {
         // 알림을 생성할 리스트
         List<NotificationDto> notifications = new ArrayList<>();
 
-        predictionDataList.stream().filter(p -> p.getPrediction() >= 0.4)
+        predictionDataList.stream().filter(p -> p.getPrediction() >= 0.9)
                 .forEach(p -> {
                     NotificationDto dto = NotificationDto.builder()
                             .publisher(table)
