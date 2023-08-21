@@ -169,8 +169,18 @@ const Dashboard = () => {
     useEffect(() => {
         // selectedBearing 값이 변경될 때 호출되는 부분
         getCharge();
-        setLogSensorData([]); // 초기화
-        setLogPredictionData([]); // 초기화
+        setLogSensorData([]);
+        setLogPredictionData([]);
+        setMaxSensorId(0);
+        setMaxPredictionId(0);
+        setSensorLabels([]);
+        setSensorDatas_v([]);
+        setSensorDatas_h([]);
+        setPredictionLabels([]);
+        setPredictionDatas([]);
+        setLiskLevel("Low");
+        setLiskColor("#25A249");
+        setPredictionValue("0000000");
         getSensor();
         getPrediction();
     }, [selectedBearing]);
