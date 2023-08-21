@@ -9,6 +9,7 @@ export const logout = async (handleNavigate) => {
 
         if (response.ok) {
             localStorage.removeItem('token');
+            localStorage.removeItem('loginInfo');
             handleNavigate('/');
         } else {
             console.log('로그아웃 실패');
