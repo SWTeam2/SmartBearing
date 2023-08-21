@@ -15,11 +15,12 @@ const AuthGuard = ({children}) => {
                 if (!accessAllowed) {
                     alert('접근 방식이 올바르지 않습니다. 다시 로그인 해주세요.');
                     authService.logout();
+                    document.location.href = "/";
                 }
 
                 setTokenValid(accessAllowed);
             } catch (error) {
-                console.error('Error while checking token validity: ', error);
+                console.error('토큰 유효성 검사 에러 - ', error);
                 setTokenValid(false);
             }
         };
