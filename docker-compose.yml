@@ -1,12 +1,17 @@
 version: "3.8"
 services:
+  frontend:
+    container_name: smartbearing-frontend
+    command: npm start # 컨테이너가 실행될 때 실행할 명령
+    restart: always
+    image: chy0503/smartbearing-frontend
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    working_dir: /app
   db:
     container_name: smartbearing-database
-    build:
-      dockerfile: Dockerfile
-      context: ./database
-    image: smartbaering-database
-    platform: linux/arm64
+    image: mysql:8.0
     environment:
       - MYSQL_DATABASE=smartbearing
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
@@ -24,13 +29,23 @@ services:
     restart: always
   redis:
     container_name: smartbearing-redis
-    build:
-      dockerfile: Dockerfile
-      context: ./redis
-    image: smartbaering-redis
+    image: redis:alpine
     labels:
       - "name=redis"
       - "mode=standalone"
-    platform: linux/amd64
     ports:
-      - "6380:6379"
+      - "6379:6379"
+  backend:
+    container_name: smartbearing-backend
+    depends_on:
+      - db
+      - redis
+      - frontend
+    image: chy0503/smartbearing-backend
+    environment:
+      - DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - DB_USER=${DB_USER}
+      - DB_USER_PASSWORD=${DB_USER_PASSWORD}
+    ports:
+      - "80:8080"
+    restart: always

@@ -1,6 +1,7 @@
 package com.sk2.smartfactory_bearingrul.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
+
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -38,5 +39,8 @@ public class Employee {
     private String department;
 
     @Column(length = 100, nullable = false)
-    private String admin;
+    private String position;
+
+    @Column(length = 100, nullable = true)
+    private String inCharge;
 }
