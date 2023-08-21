@@ -7,10 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -61,5 +58,11 @@ public class MemberController {
     public ResponseEntity registerMember(@RequestBody RequestSignupMemberDto requestSignup) {
         memberService.registerMember(requestSignup);
         return new ResponseEntity<>(requestSignup, HttpStatus.CREATED);
+    }
+
+    @ApiOperation(value = "토큰 유효성 검사", notes = "입력받은 토큰이 저장된 토큰과 일치하는지, 유효기간을 충족하는지를 확인합니다.")
+    @GetMapping("/check-access")
+    public ResponseEntity<Boolean> checkAccess(HttpServletRequest request) {
+        return new ResponseEntity<>(memberService.checkAccess(request), HttpStatus.OK);
     }
 }

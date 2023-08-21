@@ -17,20 +17,10 @@ function App() {
                 <Route path="/signup" element={<Signup/>}/>
                 <Route element={<AuthGuard />}>
                     <Route path="/dashboard" element={<Dashboard />} />
-                </Route>
-                <Route element={<AuthGuard />}>
                     <Route path="/employee" element={<Employee />} />
-                </Route>
-                <Route element={<AuthGuard />}>
                     <Route path="/employee/create" element={<EmployeeCreate />} />
-                </Route>
-                <Route element={<AuthGuard />}>
                     <Route path="/employee/update" element={<EmployeeUpdate />} />
-                </Route>
-                <Route element={<AuthGuard />}>
                     <Route path="/employee/delete" element={<EmployeeDelete />} />
-                </Route>
-                <Route element={<AuthGuard />}>
                     <Route path="/notification" element={<Notification />} />
                 </Route>
             </Routes>
