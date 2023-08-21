@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 @Service
@@ -75,6 +76,17 @@ public class MemberService {
             // Employee 테이블에서 employeeId와 email이 일치하지 않는 경우 처리
             throw new IllegalArgumentException("사원을 찾을 수 없습니다.");
         }
+    }
+
+    public boolean checkAccess(HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
+
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+            String storedToken = (String) redisTemplate.opsForValue().get("JWT_TOKEN:" + jwtTokenProvider.getMemberId(token));
+            return storedToken  != null && storedToken.equals(token);
+        }
+
+        return false;
     }
 
     public boolean checkRegistration(String employeeId, String email) {
