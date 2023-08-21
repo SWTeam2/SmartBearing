@@ -10,6 +10,7 @@ import {
     Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import zoomPlugin from 'chartjs-plugin-zoom';
 
 ChartJS.register(
     CategoryScale,
@@ -18,7 +19,8 @@ ChartJS.register(
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    zoomPlugin
 );
 
 function SensorChart({ datasetLabel, datasetData_v, datasetData_h }) {
@@ -28,6 +30,17 @@ function SensorChart({ datasetLabel, datasetData_v, datasetData_h }) {
         plugins: {
             legend: {
                 position: 'top',
+            },
+            zoom: {
+                zoom: {
+                    wheel: {
+                        enabled: true,
+                    },
+                    pinch: {
+                        enabled: true
+                    },
+                    mode: 'xy',
+                }
             }
         }
     };

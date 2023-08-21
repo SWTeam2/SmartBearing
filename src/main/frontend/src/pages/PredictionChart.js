@@ -10,6 +10,7 @@ import {
     Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import zoomPlugin from 'chartjs-plugin-zoom';
 
 ChartJS.register(
     CategoryScale,
@@ -18,7 +19,8 @@ ChartJS.register(
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    zoomPlugin
 );
 
 function PredictionChart({ datasetLabel, datasetData }) {
@@ -28,6 +30,17 @@ function PredictionChart({ datasetLabel, datasetData }) {
         plugins: {
             legend: {
                 position: 'top',
+            },
+            zoom: {
+                zoom: {
+                    wheel: {
+                        enabled: true,
+                    },
+                    pinch: {
+                        enabled: true
+                    },
+                    mode: 'xy',
+                }
             }
         },
     };
