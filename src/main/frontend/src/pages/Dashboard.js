@@ -21,7 +21,12 @@ const Dashboard = () => {
     const handleLogout = () => {
         logout(handleNavigate);
     }
+
     const bearing = ['Bearing 1_1', 'Bearing 1_2', 'Bearing 1_3', 'Bearing 1_4', 'Bearing 1_5', 'Bearing 2_1', 'Bearing 2_2', 'Bearing 2_3', 'Bearing 2_4', 'Bearing 2_5', 'Bearing 3_1'];
+
+    const now = new Date();
+    const data = now.toISOString();
+    const [newNoti, setNewNoti] = useState(0);
 
     const [selectedBearing, setSelectedBearing] = useState(bearing[0]);
 
@@ -65,6 +70,26 @@ const Dashboard = () => {
         } catch (error) {
             setInChargeData("-");
             console.error('담당 사원 불러오기 에러 - ', error);
+        }
+    };
+
+    const getNewNoti = async () => {
+        try {
+            const response = await fetch(`/api/notification/countAfter/${data}`, {
+                method: 'GET',
+                headers: {
+                    'X-AUTH-TOKEN': localStorage.getItem("token")
+                }
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                setNewNoti(responseData);
+            } else {
+                console.log('알림 전체 개수 불러오기 실패');
+            }
+        } catch (error) {
+            console.error('알림 전체 개수 불러오기 에러 - ', error);
         }
     };
 
@@ -128,6 +153,18 @@ const Dashboard = () => {
             console.error('데이터 불러오기 에러 - ', error);
         }
     };
+
+    useEffect(() => {
+        // 10초마다 API 요청을 보내고 데이터 업데이트
+        const interval = setInterval(() => {
+            getNewNoti();
+        }, 10000); // 10초마다 실행
+
+        // 컴포넌트가 unmount될 때 interval 정리
+        return () => {
+            clearInterval(interval);
+        };
+    }, [newNoti]);
 
     useEffect(() => {
         // selectedBearing 값이 변경될 때 호출되는 부분
@@ -252,6 +289,13 @@ const Dashboard = () => {
                         <img src={bell} width="100%" alt="아이콘"/>
                     </div>
                     <div className="sidebar-text">Notification</div>
+
+                    {newNoti.valueOf() > 0 ? (
+                        <div style={{display: "flex"}}>
+                            <div>+</div>
+                            <div style={{paddingLeft: "3px"}}>{newNoti}</div>
+                        </div>
+                    ) : ""}
                 </div>
 
                 <div
@@ -347,7 +391,13 @@ const Dashboard = () => {
                         ))}
                     </div>
 
-                    <div className="dashboard drag-prevent" style={{display:"flex", width: '79%', height: '350px', overflow: 'auto', justifyContent: "center"}}>
+                    <div className="dashboard drag-prevent" style={{
+                        display: "flex",
+                        width: '79%',
+                        height: '350px',
+                        overflow: 'auto',
+                        justifyContent: "center"
+                    }}>
                         <PredictionChart datasetLabel={predictionLabels} datasetData={predictionDatas}/>
                     </div>
                 </div>
@@ -374,8 +424,15 @@ const Dashboard = () => {
                         ))}
                     </div>
 
-                    <div className="dashboard drag-prevent" style={{display:"flex", width: '79%', height: '350px', overflow: 'auto', justifyContent: "center"}}>
-                        <SensorChart datasetLabel={sensorLabels} datasetData_v={sensorDatas_v} datasetData_h={sensorDatas_h}/>
+                    <div className="dashboard drag-prevent" style={{
+                        display: "flex",
+                        width: '79%',
+                        height: '350px',
+                        overflow: 'auto',
+                        justifyContent: "center"
+                    }}>
+                        <SensorChart datasetLabel={sensorLabels} datasetData_v={sensorDatas_v}
+                                     datasetData_h={sensorDatas_h}/>
                     </div>
                 </div>
 
