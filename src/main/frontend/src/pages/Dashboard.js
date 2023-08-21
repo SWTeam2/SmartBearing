@@ -123,13 +123,7 @@ const Dashboard = () => {
 
     const getPrediction = async () => {
         try {
-            // const response = await fetch(`/api/bearing/prediction/${selectedBearing}/${maxPredictionId + 1}`, {
-            //     method: 'GET',
-            //     headers: {
-            //         'X-AUTH-TOKEN': localStorage.getItem("token")
-            //     }
-            // });
-            const response = await fetch(`/api/bearing/prediction/ex/${maxPredictionId + 1}`, {
+            const response = await fetch(`/api/bearing/prediction/${selectedBearing}/${maxPredictionId + 1}`, {
                 method: 'GET',
                 headers: {
                     'X-AUTH-TOKEN': localStorage.getItem("token")
