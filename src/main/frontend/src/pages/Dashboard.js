@@ -35,8 +35,8 @@ const Dashboard = () => {
     const reversedLogSensorData = [...logSensorData].reverse();
     const reversedLogPredictionData = [...logPredictionData].reverse();
 
-    let maxSensorId = 0;
-    let maxPredictionId = 0;
+    const [maxSensorId, setMaxSensorId] = useState(0);
+    const [maxPredictionId, setMaxPredictionId] = useState(0);
 
     const [predictionLabels, setPredictionLabels] = useState([]);
     const [predictionDatas, setPredictionDatas] = useState([]);
@@ -87,7 +87,6 @@ const Dashboard = () => {
                     horiz_accel: responseData.horiz_accel
                 }));
 
-                maxSensorId = Math.max(...newLogSensorData.map(data => data.id));
                 setLogSensorData(prevData => [...prevData, ...newLogSensorData]);
             } else {
                 console.log('데이터 불러오기 실패');
@@ -121,7 +120,7 @@ const Dashboard = () => {
                     prediction: parseFloat(responseData.prediction).toFixed(6)
                 }));
 
-                maxPredictionId = Math.max(...newLogPredictionData.map(data => data.id));
+
                 setLogPredictionData(prevData => [...prevData, ...newLogPredictionData]);
 
                 const maxPredictionData = newLogPredictionData.find(data => data.id === maxPredictionId);
@@ -160,20 +159,39 @@ const Dashboard = () => {
     }, [selectedBearing]);
 
     useEffect(() => {
-        setSensorLabels(logSensorData.map(log => log.timestamp));
-        setSensorDatas_v(logSensorData.map(log => parseFloat(log.vert_accel)));
-        setSensorDatas_h(logSensorData.map(log => parseFloat(log.horiz_accel)));
+        setMaxSensorId(Math.max(...logSensorData.map(data => data.id)));
     }, [logSensorData]);
 
     useEffect(() => {
-        setPredictionLabels(logPredictionData.map(log => log.timestamp));
-        setPredictionDatas(logPredictionData.map(log => parseFloat(log.prediction).toFixed(6)));
-    }, [logPredictionData]);
+        setSensorLabels(logSensorData.map(log => log.timestamp));
+        setSensorDatas_v(logSensorData.map(log => parseFloat(log.vert_accel)));
+        setSensorDatas_h(logSensorData.map(log => parseFloat(log.horiz_accel)));
+    }, [maxSensorId]);
 
     useEffect(() => {
         // 10초마다 API 요청을 보내고 데이터 업데이트
         const interval = setInterval(() => {
             getSensor();
+        }, 10000); // 10초마다 실행
+
+        // 컴포넌트가 unmount될 때 interval 정리
+        return () => {
+            clearInterval(interval);
+        };
+    }, [sensorLabels]);
+
+    useEffect(() => {
+        setMaxPredictionId(Math.max(...logPredictionData.map(data => data.id)));
+    }, [logPredictionData]);
+
+    useEffect(() => {
+        setPredictionLabels(logPredictionData.map(log => log.timestamp));
+        setPredictionDatas(logPredictionData.map(log => parseFloat(log.prediction).toFixed(6)));
+    }, [maxPredictionId]);
+
+    useEffect(() => {
+        // 10초마다 API 요청을 보내고 데이터 업데이트
+        const interval = setInterval(() => {
             getPrediction();
         }, 10000); // 10초마다 실행
 
@@ -181,7 +199,7 @@ const Dashboard = () => {
         return () => {
             clearInterval(interval);
         };
-    }, []);
+    }, [predictionLabels]);
 
     return (
         <div style={{display: 'flex', backgroundColor: '#F2F4F8', height: '100vh'}}>
