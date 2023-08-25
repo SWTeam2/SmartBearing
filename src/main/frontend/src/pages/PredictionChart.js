@@ -27,6 +27,11 @@ function PredictionChart({ datasetLabel, datasetData }) {
     const options = {
         maintainAspectRatio: false,
         responsive: true,
+        elements: {
+            point: {
+                radius: 0,
+            },
+        },
         plugins: {
             legend: {
                 position: 'top',
